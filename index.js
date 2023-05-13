@@ -13,7 +13,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use(express.static('life_track/build'));
+app.use(express.static('lifetrack/build'));
 
 app.post('/newUser', async (req, res) => {
     try {
@@ -24,10 +24,65 @@ app.post('/newUser', async (req, res) => {
 
         await db.insertUser(firstName, lastName, email, password);
 
-        res.json({"result" : "success"});
+        res.json({"firstName" : firstName});
     }
     catch (err) {
-        res.jsob(err);
+        res.json(err);
+    }
+});
+
+app.post('/validate', async (req, res) => {
+    try {
+        const credientials = await db.getCredentials(req.body.email, req.body.password);
+        if(credientials == undefined) {
+            res.json({result : false});
+        } else {
+            res.json(credientials);
+        }
+    }
+    catch(err) {
+        res.json(err);
+    }
+});
+
+app.post('/displayAllGoals', async (req, res) => {
+    try {
+        console.log(req.body.email);
+        const allGoals = await db.getAllGoals(req.body.email);
+        res.json(allGoals);
+    }
+    catch(err) {
+        res.json(err);
+    }
+});
+
+app.post('/activeGoals', async (req, res) => {
+    try {
+        const activeGoals = await db.getActiveGoals(req.body.email);
+        res.json(activeGoals);
+    }
+    catch(err) {
+        res.json(err);
+    }
+});
+
+app.post('/inactiveGoals', async (req, res) => {
+    try {
+        const inactiveGoals = await db.getInactiveGoals(req.body.email);
+        res.json(inactiveGoals);
+    }
+    catch(err) {
+        res.json(err);
+    }
+});
+
+app.post('/completeGoals', async (req, res) => {
+    try {
+        const completedGoals = await db.getCompleteGoals(req.body.email);
+        res.json(completedGoals);
+    }
+    catch(err) {
+        res.json(err);
     }
 })
 
@@ -190,16 +245,6 @@ app.post ('/newCategory', async(req, res) => {
     }
 });
 
-app.get('/displayAllGoals', async (req, res) => {
-    try {
-        const allGoals = await db.getAllGoals(req.body.email);
-        res.json(allGoals);
-    }
-    catch(err) {
-        res.json(err);
-    }
-});
-
 app.get('/displayUserGoals', async (req, res) => {
     try {
         const userID = await db.getUserID(req.body.email);
@@ -277,20 +322,6 @@ app.get('/contact', async (req, res) => {
 });
 
 // get goal and step data
-
-app.get('/validation', async (req, res) => {
-    try {
-        const credientials = await db.getCredentials(req.body.email, req.body.password);
-        if(credientials == undefined) {
-            res.json({"result" : "no user"});
-        } else {
-            res.json(credientials);
-        }
-    }
-    catch(err) {
-        res.json(err);
-    }
-});
 
 app.post('/reset-password', async (req, res) => {
     try {

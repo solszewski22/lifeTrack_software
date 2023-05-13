@@ -146,7 +146,7 @@ class DBAbstraction {
             });
     }
 
-    insertUser(firstName, lastName, email, password) {
+    insertUser(firstName, lastName, email, password) { /*checked*/
         const sql = 'INSERT INTO Users (firstName, lastName, email, password) VALUES (?, ?, ?, ?);'
         return new Promise((resolve, reject) => {
             this.db.run(sql, [firstName, lastName, email, password], (err) => {
@@ -395,16 +395,79 @@ class DBAbstraction {
         });
     }
 
-    getAllGoals(userEmail) {
+    getAllGoals(email) { /*checked*/
         const sql = `
-            SELECT Goals.title
+            SELECT Goals.id, Goals.title, Goals.description
             FROM Users, Goals, SharedGoals
-            WHERE SharedGoals.user_id = Users.id
-            AND SharedGoals.goal_id = Goals.id
+            WHERE SharedGoals.goal_id = Goals.id
+            AND SharedGoals.user_id = Users.id
             AND Users.email = ?
         ;`;
         return new Promise ((resolve, reject) => {
-            this.db.all(sql, [userEmail], (err, row) => {
+            this.db.all(sql, [email], (err, row) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve(row);
+                }
+            });
+        });
+    }
+
+    getActiveGoals (email) { /*checked*/
+        const sql = `
+            SELECT Goals.id, Goals.title, Goals.description
+            FROM Goals, Users, SharedGoals
+            WHERE SharedGoals.goal_id = Goals.id
+            AND SharedGoals.user_id = Users.id
+            AND Goals.status = "active"
+            AND Users.email = ?
+        ;`;
+        return new Promise ((resolve, reject) => {
+            this.db.all(sql, [email], (err, row) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve(row);
+                }
+            });
+        });
+    }
+
+    getInactiveGoals (email) { 
+        const sql = `
+            SELECT Goals.id, Goals.title, Goals.description
+            FROM Goals, Users, SharedGoals
+            WHERE SharedGoals.goal_id = Goals.id
+            AND SharedGoals.user_id = Users.id
+            AND Goals.status = "inactive"
+            AND Users.email = ?
+        ;`;
+        return new Promise ((resolve, reject) => {
+            this.db.all(sql, [email], (err, row) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve(row);
+                }
+            });
+        });
+    }
+
+    getCompleteGoals (email) { /*checked*/
+        const sql = `
+            SELECT Goals.id, Goals.title, Goals.description
+            FROM Goals, Users, SharedGoals
+            WHERE SharedGoals.goal_id = Goals.id
+            AND SharedGoals.user_id = Users.id
+            AND Goals.status = "complete"
+            AND Users.email = ?
+        ;`;
+        return new Promise ((resolve, reject) => {
+            this.db.all(sql, [email], (err, row) => {
                 if(err) {
                     reject(err);
                 }
@@ -548,7 +611,7 @@ class DBAbstraction {
         });
     }
 
-    getCredentials (email, password) {
+    getCredentials (email, password) { /*checked*/
         const sql = `
             SELECT firstName
             FROM Users
