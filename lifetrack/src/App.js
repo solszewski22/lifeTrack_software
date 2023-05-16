@@ -10,11 +10,16 @@ import Navbar from './pages/Navbar';
 import ShowNavbar from './pages/ShowNavbar';
 import ShowSidebar from './pages/ShowSidebar';
 import Sidebar from './pages/Sidebar';
+import NewGoalOverview from './pages/CreateGoal';
+import Edit from './pages/Edit';
 
 function App() {
     const [firstName, setfirstName] = useState();
+    const [goalTitle, setGoalTitle] = useState();
     const [email, setEmail] = useState();
-    const [goals, setGoals] = useState({});
+    const [goals, setGoals] = useState([]);
+    const [currGoal, setCurrGoal] = useState([]);
+    const [currSteps, setCurrSteps] = useState([]);
     const [status, setStatus] = useState("Login");
     const navigate = useNavigate();
 
@@ -25,7 +30,6 @@ function App() {
               password: user.password
           }; 
           setEmail(userData.email);
-          console.log(email);
 
           const fetchConfigData = { 
               method: "POST", 
@@ -84,7 +88,6 @@ function App() {
 
     async function displayAllGoals () { 
       try { 
-        console.log(email);
         const userData = { 
             email: email
           }; 
@@ -101,7 +104,6 @@ function App() {
  
         if(response.ok) { 
             const goalsToDisplay = await response.json();
-            console.log(goalsToDisplay);
             setGoals(goalsToDisplay);
             navigate('/dashboard');
         } else { 
@@ -200,6 +202,148 @@ function App() {
           }
       };
 
+      async function getSpecificGoal (goalID) { 
+        try { 
+          const userData = { 
+              id: goalID.id
+            }; 
+
+            const fetchConfigData = { 
+                method: "POST", 
+                body: JSON.stringify(userData),  
+                headers: { 
+                    "Content-Type": "application/json" 
+                } 
+            }; 
+          
+          const response = await fetch('/getGoal', fetchConfigData); 
+   
+          if(response.ok) { 
+              const goalToDisplay = await response.json();
+              setCurrGoal(goalToDisplay);
+
+              const result = await  fetch('/getSteps', fetchConfigData);
+              if(response.ok) {
+                const stepsToSet = await result.json();
+                setCurrSteps(stepsToSet);
+              }
+              else {
+                console.log("Error with the result data");
+              }
+
+              navigate('/edit');
+          } else { 
+              console.log("Error with the response data"); 
+          } 
+   
+          } catch(err) { 
+              console.log(`Error getting goals: ${err}`); 
+          }
+      };
+
+      async function addGoal (goal) { 
+        try {
+            const goalData = { 
+              email: email,
+              title: goal.title,
+              description: goal.description,
+              status: goal.status
+            }; 
+
+            setGoalTitle(goalData.title);
+            setCurrGoal(goalData);
+
+            const fetchConfigData = { 
+                method: "POST", 
+                body: JSON.stringify(goalData),  
+                headers: { 
+                    "Content-Type": "application/json" 
+                } 
+            }; 
+      
+            const response = await fetch("/newGoal", fetchConfigData); 
+      
+            if(response.ok) { 
+                const goals = await response.json();
+                setGoals(goals);
+                navigate('/dashboard');
+            } else { 
+                console.log("Error with the response data"); 
+            } 
+      
+        } catch (err) { 
+            console.log(`Error: ${err}`); 
+        } 
+      };
+
+
+
+      async function addStep (step) { 
+        try {
+            const stepData = { 
+              goalTitle: goalTitle,
+              stepNum: step.stepNum,
+              title: step.title,
+              status: step.status,
+              notes: step.notes
+            };
+
+            const fetchConfigData = { 
+                method: "POST", 
+                body: JSON.stringify(stepData),  
+                headers: { 
+                    "Content-Type": "application/json" 
+                } 
+            }; 
+      
+            const response = await fetch("/newStep", fetchConfigData); 
+      
+            if(response.ok) {
+                const stepsToDisplay = await response.json();
+                // setSteps(stepsToDisplay);
+                navigate('/createSteps'); 
+            }
+            else {
+                console.log("Error with the response data"); 
+            } 
+      
+        } catch (err) { 
+            console.log(`Error: ${err}`); 
+        } 
+      };
+
+    //   async function addContact (contact) { 
+    //     try {
+    //         const contactData = { 
+    //           firstName: contact.firstName,
+    //           lastName: contact.lastName,
+    //           phoneNum: contact.phoneNum,
+    //           email: contact.email
+    //         }; 
+
+    //         const fetchConfigData = { 
+    //             method: "POST", 
+    //             body: JSON.stringify(contactData),  
+    //             headers: { 
+    //                 "Content-Type": "application/json" 
+    //             } 
+    //         };
+      
+    //         const response = await fetch("/newContact", fetchConfigData); 
+      
+    //         if(response.ok) { 
+    //             const contacts = await response.json();
+    //             setContacts(contacts);
+    //             navigate('/createGoal');
+    //         } else { 
+    //             console.log("Error with the response data"); 
+    //         } 
+      
+    //     } catch (err) { 
+    //         console.log(`Error: ${err}`); 
+    //     } 
+    //   };
+
     return ( 
     <>
         <ShowNavbar>
@@ -219,10 +363,12 @@ function App() {
             <Route path='/about' element={<About />} />
             <Route path='/register' element={<Register onAddUser={addUser}/>} />
             <Route path="/login" element={<Login onValidate={displayName} onDisplayGoals={displayAllGoals}/>} />
-            <Route path="/dashboard" element={<Dashboard goals={goals} />} />
-            <Route path="/active" element={<Dashboard goals={goals} />} />
-            <Route path="/inactive" element={<Dashboard goals={goals} />} />
-            <Route path="/complete" element={<Dashboard goals={goals} />} />
+            <Route path="/dashboard" element={<Dashboard goals={goals} onGetGoal={getSpecificGoal} />} />
+            <Route path="/active" element={<Dashboard goals={goals} onGetGoal={getSpecificGoal}/>} />
+            <Route path="/inactive" element={<Dashboard goals={goals} onGetGoal={getSpecificGoal}/>} />
+            <Route path="/complete" element={<Dashboard goals={goals} onGetGoal={getSpecificGoal}/>} />
+            <Route path="/createGoal" element={<NewGoalOverview onAddGoal={addGoal} />} />
+            <Route path="/edit" element={<Edit goal={currGoal} steps={currSteps}/>} />
         </Routes>
     </>
     );

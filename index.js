@@ -47,7 +47,6 @@ app.post('/validate', async (req, res) => {
 
 app.post('/displayAllGoals', async (req, res) => {
     try {
-        console.log(req.body.email);
         const allGoals = await db.getAllGoals(req.body.email);
         res.json(allGoals);
     }
@@ -84,30 +83,52 @@ app.post('/completeGoals', async (req, res) => {
     catch(err) {
         res.json(err);
     }
-})
+});
+
+app.post('/getGoal', async (req, res) => {
+    try {
+        const goal = await db.getSpecificGoal(req.body.id);
+        res.json(goal);
+    }
+    catch(err) {
+        res.json(err);
+    }
+});
 
 app.post('/newGoal', async (req, res) => {
     try {
-        const categoryID = await db.getCategoryID(req.body.categoryName);
+        // const categoryID = await db.getCategoryID(req.body.categoryName);
         const userID = await db.getUserID(req.body.email);
 
-        if(categoryID)
-        {
+        // if(1)
+        // {
             const title = req.body.title;
             const description = req.body.description;
-            const category_id = categoryID.id;
+            const status = req.body.status;
+            // const category_id = categoryID.id;
 
-            const goalID = await db.insertGoal(title, description, category_id);
+            const goalID = await db.insertGoal(title, description, status);
 
             await db.insertCollaborator(userID.id, goalID);
+            const goals = await db.getAllGoals(req.body.email);
 
-            res.json({"result" : "success"});
-        }
-        else {
-            res.json({"categoty results" : "None"});
-        }   
+            res.json(goals);
+        //}
+        // else {
+        //     res.json({"categoty results" : "None"});
+        // }   
     }
     catch (err) {
+        res.json(err);
+    }
+});
+
+app.post('/getSteps', async(req, res) => {
+    try {
+        const goal = await db.getSteps(req.body.id);
+        res.json(goal);
+    }
+    catch(err) {
         res.json(err);
     }
 });

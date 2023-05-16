@@ -36,10 +36,9 @@ class DBAbstraction {
             CREATE TABLE IF NOT EXISTS "Goals" (
                 "id"	INTEGER,
                 "title"	TEXT,
-                "description"	INTEGER,
-                "category_id"	INTEGER,
-                PRIMARY KEY("id"),
-                FOREIGN KEY("category_id") REFERENCES "Category"("id")
+                "description"	TEXT,
+                "status"    TEXT,
+                PRIMARY KEY("id")
             );`;
         const sqlContacts = `            
             CREATE TABLE IF NOT EXISTS "Contacts" (
@@ -55,49 +54,51 @@ class DBAbstraction {
                 "id"	INTEGER,
                 "title"	TEXT,
                 "stepNum"	INTEGER,
+                "status"    TEXT,
+                "notes"     TEXT,
                 "goal_id"	INTEGER,
                 PRIMARY KEY("id"),
                 FOREIGN KEY("goal_id") REFERENCES "Goals"("id")
             );`;
-        const sqlFiles = `            
-            CREATE TABLE IF NOT EXISTS "Files" (
-                "id"	INTEGER,
-                "title"	TEXT,
-                "file"	BLOB,
-                PRIMARY KEY("id")
-            );`;
-        const sqlNotes = `            
-            CREATE TABLE IF NOT EXISTS "Notes" (
-                "id"	INTEGER,
-                "description"	TEXT,
-                "step_id"	INTEGER,
-                PRIMARY KEY("id"),
-                FOREIGN KEY("step_id") REFERENCES "Steps"("id")
-            );`;
-        const sqlDetails = `            
-            CREATE TABLE IF NOT EXISTS"Details" (
-                "id"	INTEGER,
-                "title"	TEXT,
-                "description"	TEXT,
-                "goal_id"	INTEGER,
-                FOREIGN KEY("goal_id") REFERENCES "Goals"("id"),
-                PRIMARY KEY("id")
-            );`;
-        const sqlAttributes = `
-            CREATE TABLE IF NOT EXISTS "Attributes" (
-                "id"    INTEGER,
-                "title" TEXT,
-                "description"   TEXT,
-                "step_id"   INTEGER,
-                FOREIGN KEY("step_id") REFERENCES "Steps"("id"),
-                PRIMARY KEY("id")
-            );`;
-        const sqlCategories = `
-            CREATE TABLE IF NOT EXISTS "Categories" (
-                "id"    INTEGER,
-                "name"  TEXT,
-                PRIMARY KEY("id")
-            );`;
+        // const sqlFiles = `            
+        //     CREATE TABLE IF NOT EXISTS "Files" (
+        //         "id"	INTEGER,
+        //         "title"	TEXT,
+        //         "file"	BLOB,
+        //         PRIMARY KEY("id")
+        //     );`;
+        // const sqlNotes = `            
+        //     CREATE TABLE IF NOT EXISTS "Notes" (
+        //         "id"	INTEGER,
+        //         "description"	TEXT,
+        //         "step_id"	INTEGER,
+        //         PRIMARY KEY("id"),
+        //         FOREIGN KEY("step_id") REFERENCES "Steps"("id")
+        //     );`;
+        // const sqlDetails = `            
+        //     CREATE TABLE IF NOT EXISTS"Details" (
+        //         "id"	INTEGER,
+        //         "title"	TEXT,
+        //         "description"	TEXT,
+        //         "goal_id"	INTEGER,
+        //         FOREIGN KEY("goal_id") REFERENCES "Goals"("id"),
+        //         PRIMARY KEY("id")
+        //     );`;
+        // const sqlAttributes = `
+        //     CREATE TABLE IF NOT EXISTS "Attributes" (
+        //         "id"    INTEGER,
+        //         "title" TEXT,
+        //         "description"   TEXT,
+        //         "step_id"   INTEGER,
+        //         FOREIGN KEY("step_id") REFERENCES "Steps"("id"),
+        //         PRIMARY KEY("id")
+        //     );`;
+        // const sqlCategories = `
+        //     CREATE TABLE IF NOT EXISTS "Categories" (
+        //         "id"    INTEGER,
+        //         "name"  TEXT,
+        //         PRIMARY KEY("id")
+        //     );`;
         const sqlSharedGoals = `
             CREATE TABLE IF NOT EXISTS "SharedGoals" (
                 "user_id"   INTEGER,
@@ -114,14 +115,14 @@ class DBAbstraction {
                 FOREIGN KEY("goal_id") REFERENCES "Goals"("id"),
                 PRIMARY KEY("goal_id","contact_id")
             );`;
-        const sqlStepFile = `            
-            CREATE TABLE IF NOT EXISTS "StepFile" (
-                "step_id"	INTEGER,
-                "file_id"	INTEGER,
-                PRIMARY KEY("step_id","file_id"),
-                FOREIGN KEY("step_id") REFERENCES "Steps"("id"),
-                FOREIGN KEY("file_id") REFERENCES "Files"("id")
-            );`;
+        // const sqlStepFile = `            
+        //     CREATE TABLE IF NOT EXISTS "StepFile" (
+        //         "step_id"	INTEGER,
+        //         "file_id"	INTEGER,
+        //         PRIMARY KEY("step_id","file_id"),
+        //         FOREIGN KEY("step_id") REFERENCES "Steps"("id"),
+        //         FOREIGN KEY("file_id") REFERENCES "Files"("id")
+        //     );`;
             return new Promise((resolve, reject) => { 
                 this.db.serialize(() => {   
                     try {
@@ -129,14 +130,14 @@ class DBAbstraction {
                         this.db.run(sqlGoals, []);
                         this.db.run(sqlContacts, []);
                         this.db.run(sqlSteps, []);
-                        this.db.run(sqlFiles, []);
-                        this.db.run(sqlNotes, []);
-                        this.db.run(sqlDetails, []);
-                        this.db.run(sqlAttributes, []);
-                        this.db.run(sqlCategories, []);
+                        // this.db.run(sqlFiles, []);
+                        // this.db.run(sqlNotes, []);
+                        // this.db.run(sqlDetails, []);
+                        // this.db.run(sqlAttributes, []);
+                        // this.db.run(sqlCategories, []);
                         this.db.run(sqlSharedGoals, []);
                         this.db.run(sqlGoalContact, []);
-                        this.db.run(sqlStepFile, []);
+                        // this.db.run(sqlStepFile, []);
                         resolve();
                     }              
                     catch(err) {
@@ -160,10 +161,10 @@ class DBAbstraction {
         });
     }
 
-    insertGoal (title, description, category_id) {
-        const sql = 'INSERT INTO Goals (title, description, category_id) VALUES (?, ?, ?);'
+    insertGoal (title, description, status) { /*checked*/
+        const sql = 'INSERT INTO Goals (title, description, status) VALUES (?, ?, ?);'
         return new Promise ((resolve, reject) => {
-            this.db.run(sql, [title, description, category_id], function (err) {
+            this.db.run(sql, [title, description, status], function (err) {
                 if(err) {
                     reject(err);
                 }
@@ -397,7 +398,7 @@ class DBAbstraction {
 
     getAllGoals(email) { /*checked*/
         const sql = `
-            SELECT Goals.id, Goals.title, Goals.description
+            SELECT Goals.id, Goals.title, Goals.description, Goals.status
             FROM Users, Goals, SharedGoals
             WHERE SharedGoals.goal_id = Goals.id
             AND SharedGoals.user_id = Users.id
@@ -417,11 +418,11 @@ class DBAbstraction {
 
     getActiveGoals (email) { /*checked*/
         const sql = `
-            SELECT Goals.id, Goals.title, Goals.description
+            SELECT Goals.id, Goals.title, Goals.description, Goals.status
             FROM Goals, Users, SharedGoals
             WHERE SharedGoals.goal_id = Goals.id
             AND SharedGoals.user_id = Users.id
-            AND Goals.status = "active"
+            AND Goals.status = "Active"
             AND Users.email = ?
         ;`;
         return new Promise ((resolve, reject) => {
@@ -436,13 +437,13 @@ class DBAbstraction {
         });
     }
 
-    getInactiveGoals (email) { 
+    getInactiveGoals (email) { /*checked*/
         const sql = `
-            SELECT Goals.id, Goals.title, Goals.description
+            SELECT Goals.id, Goals.title, Goals.description, Goals.status
             FROM Goals, Users, SharedGoals
             WHERE SharedGoals.goal_id = Goals.id
             AND SharedGoals.user_id = Users.id
-            AND Goals.status = "inactive"
+            AND Goals.status = "Inactive"
             AND Users.email = ?
         ;`;
         return new Promise ((resolve, reject) => {
@@ -463,11 +464,48 @@ class DBAbstraction {
             FROM Goals, Users, SharedGoals
             WHERE SharedGoals.goal_id = Goals.id
             AND SharedGoals.user_id = Users.id
-            AND Goals.status = "complete"
+            AND Goals.status = "Complete"
             AND Users.email = ?
         ;`;
         return new Promise ((resolve, reject) => {
             this.db.all(sql, [email], (err, row) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve(row);
+                }
+            });
+        });
+    }
+
+    getSpecificGoal(goalID) { /*checked*/
+        const sql = `
+            SELECT Goals.title, Goals.description, Goals.status
+            FROM Goals
+            WHERE Goals.id = ?
+        ;`;
+        return new Promise ((resolve, reject) => {
+            this.db.get(sql, [goalID], (err, row) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve(row);
+                }
+            });
+        });
+    }
+
+    getSteps(goalID) {
+        const sql = `
+            SELECT stepNum, title, status, notes
+            FROM Steps
+            WHERE Steps.goal_id = ?
+            ORDER BY stepNum ASC
+        ;`;
+        return new Promise ((resolve, reject) => {
+            this.db.all(sql, [goalID], (err, row) => {
                 if(err) {
                     reject(err);
                 }
