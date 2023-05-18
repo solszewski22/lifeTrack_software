@@ -189,7 +189,7 @@ class DBAbstraction {
         });
     }
 
-    insertContact (firstName, lastName, phoneNum, email) {
+    insertContact (firstName, lastName, phoneNum, email) { /*checked*/
         const sql = `INSERT INTO Contacts (firstName, lastName, phoneNum, email) VALUES (?, ?, ?, ?);`;
         return new Promise ((resolve, reject) => {
             this.db.run(sql, [firstName, lastName, phoneNum, email], function (err) {
@@ -203,7 +203,7 @@ class DBAbstraction {
         });
     }
 
-    insertGoalContact(goalID, contactID) {
+    insertGoalContact(goalID, contactID) { /*checked*/
         const sql = `INSERT INTO GoalContact (goal_id, contact_id) VALUES (?, ?);`;
         return new Promise ((resolve, reject) => {
             this.db.run(sql, [goalID, contactID], (err) => {
@@ -234,10 +234,10 @@ class DBAbstraction {
         });
     }
 
-    insertStep (title, stepNum, status, goal_id) {
-        const sql = `INSERT INTO Steps (title, stepNum, status, goal_id) VALUES (?, ?, ?, ?);`;
+    insertStep (title, stepNum, status, notes, goal_id) { /*checked*/
+        const sql = `INSERT INTO Steps (title, stepNum, status, notes, goal_id) VALUES (?, ?, ?, ?, ?);`;
         return new Promise ((resolve, reject) => {
-            this.db.run(sql, [title, stepNum, status, goal_id], (err) => {
+            this.db.run(sql, [title, stepNum, status, notes, goal_id], (err) => {
                 if(err) {
                     reject(err);
                 }
@@ -497,7 +497,7 @@ class DBAbstraction {
         });
     }
 
-    getSteps(goalID) {
+    getSteps(goalID) { /*checked*/
         const sql = `
             SELECT stepNum, title, status, notes
             FROM Steps
@@ -515,6 +515,46 @@ class DBAbstraction {
             });
         });
     }
+
+    getContacts(goalID) { /*checked*/
+        const sql = `
+            SELECT Contacts.firstName, Contacts.lastName, Contacts.phoneNum, Contacts.email
+            FROM GoalContact, Goals, Contacts
+            WHERE GoalContact.goal_id = Goals.id
+            AND GoalContact.contact_id = Contacts.id
+            AND Goals.id = ?
+        ;`;
+        return new Promise ((resolve, reject) => {
+            this.db.all(sql, [goalID], (err, row) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve(row);
+                }
+            });
+        });
+    }
+
+    updateGoal(goalID, title, description, status) { /*checked*/
+        const sql = `
+            UPDATE Goals
+            SET title = ?, description = ?, status = ?
+            WHERE id = ?
+        ;`;
+        return new Promise ((resolve, reject) => {
+            this.db.all(sql, [title, description, status, goalID], (err, row) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve(row);
+                }
+            });
+        });
+    }
+
+    
 
     getUserGoals (userID) {
         const sql =`

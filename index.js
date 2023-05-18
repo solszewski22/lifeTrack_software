@@ -133,6 +133,27 @@ app.post('/getSteps', async(req, res) => {
     }
 });
 
+app.post('/getContacts', async(req, res) => {
+    try {
+        const goal = await db.getContacts(req.body.id);
+        res.json(goal);
+    }
+    catch(err) {
+        res.json(err);
+    }
+});
+
+app.post('/updateGoal', async(req, res) => {
+    try {
+        await db.updateGoal(req.body.id, req.body.title, req.body.description, req.body.status);
+        const goal = await db.getSpecificGoal(req.body.id);
+        res.json(goal);
+    }
+    catch(err) {
+        res.json(err);
+    }
+});
+
 app.post('/newDetail', async (req, res) => {
     try {
         const goalID = await db.getGoalID(req.body.goalTitle);
@@ -153,18 +174,13 @@ app.post('/newDetail', async (req, res) => {
     }
 });
 
-app.post('/newContact', async (req, res) => {
-    const firstName = req.body.firstName;
-    const lastName = req.body.lastName;
-    const phoneNum = req.body.phoneNum;
-    const email = req.body.email;
-
+app.post('/addContact', async (req, res) => {
     try {
-        const contactID = await db.insertContact(firstName, lastName, phoneNum, email);
-        const goalID = await db.getGoalID(req.body.goalTitle);
+        const contactID = await db.insertContact(req.body.firstName, req.body.lastName, req.body.phoneNum, req.body.email);
+        await db.insertGoalContact(req.body.id, contactID);
 
-        await db.insertGoalContact(goalID.id, contactID);
-        res.json({"results" : "success"});
+        const contacts = await db.getContacts(req.body.id)
+        res.json(contacts);
     }
     catch (err) {
         res.json(err);
@@ -185,17 +201,11 @@ app.post('/updateDescription', async (req, res) => {
     }
 });
 
-app.post ('/newStep', async (req, res) => {
+app.post ('/addStep', async (req, res) => {
     try {
-        const goalID = await db.getGoalID(req.body.goalTitle);
-
-        const stepTitle = req.body.title;
-        const stepNum = req.body.stepNum;
-        const status = req.body.status;
-
-        await db.insertStep(stepTitle, stepNum, status, goalID.id);
-
-        res.json({"results" : "success"});
+        await db.insertStep(req.body.title, req.body.stepNum, req.body.status, req.body.notes, req.body.id);
+        const steps = await db.getSteps(req.body.id);
+        res.json(steps);
     }
     catch (err) {
         res.json(err);

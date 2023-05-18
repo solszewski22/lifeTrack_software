@@ -26,12 +26,12 @@ function NewGoal (props) {
                         <input type="text" class="form-control" placeholder="Title" id="title" />
                     </div>
                     <div class="col">
-                    <select class="form-select" id="status" as="select" onChange={statusValue}>
-                        <option selected>Status</option>
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
-                        <option value="Complete">Completed</option>
-                    </select>
+                        <select class="form-select" id="status" as="select" onChange={statusValue}>
+                            <option selected>Status</option>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                            <option value="Complete">Completed</option>
+                        </select>
                     </div>
                 </div>
                 <div class="mb-3">
