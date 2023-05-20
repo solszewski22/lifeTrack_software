@@ -12,10 +12,8 @@ function Dashboard(props) {
     }
     
     return (
-        <div class="container goals">
-            <hr/>
-            <Link to="/createGoal" type="button" class="btn btn-success">Add</Link>
-            <button type="button" class="btn btn-danger">Remove</button>
+        <div class="container dashboard">
+            <Link to="/createGoal" ><i class="bi bi-plus-circle"></i></Link>
             <div class="goal-display">
                 {props.goals.map((goal) => {
                     return (
@@ -23,8 +21,8 @@ function Dashboard(props) {
                             <div class="card-body">
                                 <p class="card-status" id="status">{goal.status}</p>
                                 <h5 class="card-title" id="title">{goal.title}</h5>
-                                <p id="description">{goal.description}</p>
-                                <button id="button" value={goal.id} type="submit" class="btn btn-success card-link">Details</button>
+                                <p id="description" class="card-descrip" >{goal.description}</p>
+                                <button id="button" value={goal.id} type="submit" class="btn card-link">Details</button>
                             </div>
                         </form>
                     )

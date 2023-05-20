@@ -1,8 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 
-// module for steps open on submit of details (assign and get step id), button within module to edit (toggle between views of view and edit of goal)
-
 function View(props) {
     const navigate = useNavigate();
     
@@ -11,34 +9,36 @@ function View(props) {
     };
 
     return (
-        <div class="container edit" onClick={goToEdit}>
-            <button type="click" class="btn btn-success">Edit</button>
+        <div class="container view" onClick={goToEdit}>
+            <div type="click"><i class="bi bi-pencil-square view-pencil-square"></i></div>
             <h2>{props.goal.title}</h2>
             <p>Status: {props.goal.status}</p>
             <p>Desrciption:<br/>{props.goal.description}</p>
             <h5>Steps</h5>
-            <table class="table">
+            <table class="table table-striped">
                 <thead>
                     <tr>
                     <th scope="col">#</th>
+                    <th scope="col">Status</th>
                     <th scope="col">Title</th>
-                    <th scopre="col"></th>
+                    <th scopre="col">Notes</th>
                     </tr>
                 </thead>
                 <tbody>
                     {props.steps.map((step) => {
                         return (
-                            <tr key={step.id}>
-                                <td>{step.stepNum}</td>
-                                <td>{step.title}</td>
-                                <td><button type="submit" class="btn btn-success">Details</button></td>
-                            </tr>
+                                <tr key={step.id}>
+                                    <td>{step.stepNum}</td>
+                                    <td>{step.status}</td>
+                                    <td>{step.title}</td>
+                                    <td>{step.notes}</td>
+                                </tr>
                         );
                     })}
                 </tbody>
             </table>
             <h5>Contacts</h5>
-            <table class="table">
+            <table class="table table-striped">
                 <thead>
                     <tr>
                     <th scope="col">First Name</th>

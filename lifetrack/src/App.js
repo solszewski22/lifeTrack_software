@@ -13,6 +13,8 @@ import Sidebar from './pages/Sidebar';
 import NewGoalOverview from './pages/CreateGoal';
 import View from './pages/View';
 import Edit from './pages/Edit';
+import EditStep from './pages/EditStep';
+import EditContact from './pages/EditContact';
 
 function App() {
     const [firstName, setfirstName] = useState();
@@ -21,8 +23,12 @@ function App() {
     const [goals, setGoals] = useState([]);
     const [currGoal, setCurrGoal] = useState([]);
     const [currSteps, setCurrSteps] = useState([]);
+    const [currStep, setCurrStep] = useState([]);
     const [currGoalID, setCurrGoalID] = useState();
+    const [currStepID, setCurrStepID] = useState();
     const [currContacts, setCurrContacts] = useState([]);
+    const [currContact, setCurrContact] = useState([]);
+    const [currContactID, setCurrContactID] = useState();
 
     const [status, setStatus] = useState("Login");
     const navigate = useNavigate();
@@ -254,6 +260,66 @@ function App() {
           }
       };
 
+      async function getSpecificStep(step) {
+        try {
+            const stepID = {
+                id: step.id
+            }
+            setCurrStepID(step.id);
+            const fetchConfigData = { 
+                method: "POST", 
+                body: JSON.stringify(stepID),  
+                headers: { 
+                    "Content-Type": "application/json" 
+                } 
+            };
+
+            const response = await fetch('/getStep', fetchConfigData); 
+
+            if(response.ok) {
+                const stepToDisplay = await response.json();
+                setCurrStep(stepToDisplay);
+                navigate('/editStep');
+            }
+            else {
+                console.log("Error with the result data");
+            }
+
+        } catch(err) {
+            console.log(`Error getting goals: ${err}`);
+        }
+      };
+
+      async function getSpecificContact(contact) {
+        try {
+            const contactID = {
+                id: contact.id
+            }
+            setCurrContactID(contact.id);
+            const fetchConfigData = { 
+                method: "POST", 
+                body: JSON.stringify(contactID),  
+                headers: { 
+                    "Content-Type": "application/json" 
+                } 
+            };
+
+            const response = await fetch('/getContact', fetchConfigData); 
+
+            if(response.ok) {
+                const contactToDisplay = await response.json();
+                setCurrContact(contactToDisplay);
+                navigate('/editContact');
+            }
+            else {
+                console.log("Error with the result data");
+            }
+
+        } catch(err) {
+            console.log(`Error getting goals: ${err}`);
+        }
+      };
+
       async function addGoal (goal) { 
         try {
             const goalData = { 
@@ -377,6 +443,107 @@ function App() {
         } 
       };
 
+      async function addStepEdits(step) {
+        try {
+            const edits = {
+                id: currStepID,
+                stepNum: step.stepNum,
+                title: step.title,
+                status: step.status,
+                notes: step.notes
+            }
+
+            const fetchConfigData = { 
+                method: "POST", 
+                body: JSON.stringify(edits),  
+                headers: { 
+                    "Content-Type": "application/json" 
+                } 
+            };
+
+            const response = await fetch('/updateStep', fetchConfigData); 
+
+            if(response.ok) {
+                const stepToDisplay = await response.json();
+                setCurrStep(stepToDisplay);
+                navigate('/edit');
+            }
+            else {
+                console.log("Error with the result data");
+            }
+
+        } catch(err) {
+            console.log(`Error getting goals: ${err}`);
+        }
+      }
+
+      async function addContactEdits(contact) {
+        try {
+            const edits = {
+                id: currContactID,
+                firstName: contact.firstName,
+                lastName: contact.lastName,
+                phoneNum: contact.phoneNum,
+                email: contact.email
+            }
+
+            const fetchConfigData = { 
+                method: "POST", 
+                body: JSON.stringify(edits),  
+                headers: { 
+                    "Content-Type": "application/json" 
+                } 
+            };
+
+            const response = await fetch('/updateContact', fetchConfigData); 
+
+            if(response.ok) {
+                const contactToDisplay = await response.json();
+                setCurrContact(contactToDisplay);
+                navigate('/edit');
+            }
+            else {
+                console.log("Error with the result data");
+            }
+
+        } catch(err) {
+            console.log(`Error getting goals: ${err}`);
+        }
+      }
+
+    //   async function deleteSteps(steps) {
+    //     try {
+    //         for(let i = 0; i < steps.current.length; i++)
+    //         {
+    //             const stepID = {
+    //                 stepID: steps.current[i].id,
+    //                 goalID: currGoalID  
+    //             }
+    //             console.log(stepID);
+    //             const fetchConfigData = { 
+    //                 method: "POST", 
+    //                 body: JSON.stringify(stepID),  
+    //                 headers: { 
+    //                     "Content-Type": "application/json" 
+    //                 } 
+    //             };
+    
+    //             const response = await fetch('/stepsToUpdate', fetchConfigData); 
+    
+    //             if(response.ok) {
+    //                 const stepsToUpdate = await response.json();
+    //                 console.log(stepsToUpdate);
+    //             }
+    //             else {
+    //                 console.log("Error with the result data");
+    //             }
+    //         }
+
+    //     } catch(err) {
+    //         console.log(`Error getting goals: ${err}`);
+    //     }
+    //   }
+
     return ( 
     <>
         <ShowNavbar>
@@ -402,70 +569,12 @@ function App() {
             <Route path="/complete" element={<Dashboard goals={goals} onGetGoal={getSpecificGoal}/>} />
             <Route path="/createGoal" element={<NewGoalOverview onAddGoal={addGoal} />} />
             <Route path="/view" element={<View goal={currGoal} steps={currSteps} contacts={currContacts}/>} />
-            <Route path="/edit" element={<Edit goal={currGoal} steps={currSteps} contacts={currContacts} onAddEdits={addEdits}/>} />
+            <Route path="/edit" element={<Edit goal={currGoal} steps={currSteps} contacts={currContacts} onAddEdits={addEdits} onGetStep={getSpecificStep} onGetContact={getSpecificContact} />} />
+            <Route path="/editStep" element={<EditStep step={currStep} onAddStepEdits={addStepEdits}/>} />
+            <Route path="/editContact" element={<EditContact contact={currContact} onAddContactEdits={addContactEdits}/> }/>
         </Routes>
     </>
     );
 }
 
 export default App;
-
-
-
-
-
-// class App extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {firstName: ""};
-//   }
-
-//   addUser = async (newUser) => {
-//     try {
-//       const userData = {
-//         firstName: newUser.firstName,
-//         lastName: newUser.lastName,
-//         email: newUser.email,
-//         password: newUser.password
-//       };
-
-//       const fetchConfigData = {
-//         method: "POST",
-//         body: JSON.stringify(userData),
-//         headers: {
-//           "Content-Type":"application/json"
-//         }
-//       };
-
-//       const response = await fetch("/newUser", fetchConfigData);
-
-//       if(response.ok){
-//         const name = await response.json();
-//         this.setState({firstName: name} , () => {
-//           console.log(this.state.firstName);
-//         })
-//       } else {
-//         console.log('Error with response data');
-//       }
-//     }
-//     catch (err) {
-//       console.log(`Error: ${err}`);
-//     }
-//   };
-
-//   render() {
-//       return (
-//         <div>
-//           <BrowserRouter>
-//             <Routes>
-//               <Route path='/' element={<Home />} />
-//               <Route path='/about' element={<About />} />
-//               <Route path='/register' element={<Register onAddUser={this.addUser}/>} />
-//               <Route path='/login' element={<Login />} />
-//               <Route path='/dashboard' element={<Dashboard name={this.state}/>} />
-//             </Routes>
-//           </BrowserRouter>
-//         </div>
-//       );
-//     };
-// }

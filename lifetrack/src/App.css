@@ -14,6 +14,10 @@
     align-items: stretch;
     gap: 2rem;
     padding: 0 1rem;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    width: 100%;
   }
   
   .site-title {
@@ -104,48 +108,72 @@
 
   /*Sidebar*/
 .sidebar {
-  background-color:greenyellow;
-  height: 100vh;
+  background-color: #89e1d0;
+  height: 90.3vh;
   width: 20vw;
   padding-top: 2%;
-  padding-right: 2%;
-  position: fixed; 
+  position: fixed;
+  bottom: 0; 
 }
 
 .sidebar h3 {
   padding-left: 10%;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid gray;
 }
 
-.sidebar h3 hr {
-  padding-left: 10%;
+.sidebar .user {
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .sidebar div {
-  padding: 5% 5%;
+  padding-top: 10px;
+  padding-bottom: 1px; 
 }
 
-.sidebar div:hover {
+.sidebar .links:hover {
   background-color: white;
-  width: 20vw;
 }
 
-.sidebar div a{
+.sidebar div a {
   text-decoration: none;
-  font-size: 17px;
-  padding-left: 10%;
   color: black;
+  font-size: 18px;
+}
+
+.sidebar a p {
+  padding-left: 1.5rem;
+}
+
+.sidebar a p i {
+  padding-right: 1rem; 
 }
 
 .container {
-  width: 80vw;
+  width: 78vw;
   float: right;
+  margin-top: 60px;
 }
-
 /*Dashboard*/
 
-.goals-display {
+.bi-plus-circle {
+  font-size: 20px;
+  float: left;
+  padding-top: 10px;
+  padding-right: 10px;
+  color: #c4f150;
+}
+
+.bi-plus-circle:hover {
+  color: black;
+}
+
+.goal-display {
+  padding-top: 60px;
   display: flex;
-  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
 .card {
@@ -156,14 +184,31 @@
   text-align: right;
   margin:0;
   font-size: 14px;
+  color:#5ea5f2;
 }
 
 .card-title {
   text-align: center;
 }
 
+/* .card-descrip {
+  --max-lines: 3;
+  display:-webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--max-lines);
+} */
+
 .card-link {
   float:right;
+  background-color: white;
+  color: #fda421;
+  border: 2px solid #fda421;
+}
+
+.card-link:hover {
+  background-color: #fda421;
+  color: white;
 }
 
 /*New Goal*/
@@ -171,7 +216,7 @@
 .newGoal h2 {
   text-align: center;
   margin-top: 6%;
-  color: greenyellow;
+  color: #5ea5f2;
 }
 
 .newGoal form {
@@ -201,9 +246,110 @@
   float: right;
 }
 
-/*Edit Page*/
- .edit h2{
-  color:greenyellow;
+/*View*/
+.view {
+  padding-bottom: 30px;
+}
+
+.view-pencil-square {
+  font-size: 25px;
+  color: #fda421
+}
+
+.bi-pencil-square:hover {
+  color: black;
+  cursor: pointer;
+}
+
+.view h2 {
+  color: #5ea5f2;
   text-align: center;
-  margin-top: 5%;
+  margin-top: 10px;
+}
+
+.view h5 {
+  padding-top: 20px;
+}
+
+
+/*Edit Page*/
+ .edit h3{
+  color: #5ea5f2;
+  text-align: center;
+  margin-top: 30px;
+  padding-bottom: 20px;
  }
+
+ .edit .col {
+  padding-bottom: 1rem;
+ }
+
+ .btn-edit {
+  background-color: #c4f150;
+  color: white;
+  float: right;
+ }
+
+.btn-edit:hover {
+  background-color: #b6e04b;
+  color: white;
+} 
+
+.edit-steps {
+  padding-left: 20px;
+  gap: 1rem;
+}
+
+.edit-pencil-square {
+  color: #c4f150;
+}
+
+.accordion-button {
+  color: #89e1d0;
+  cursor: pointer;
+}
+
+.btn-editStep {
+  background-color: #c4f150;
+  color: white;
+}
+
+.btn-editStep:hover {
+  background-color: #b6e04b;
+  color: white;
+}
+
+.editStep {
+  padding-bottom: 30px;
+}
+
+#buttonEdit {
+  padding: 0 0;
+}
+
+#buttonEdit:focus {
+  border: none;
+}
+
+#buttonCEdit {
+  padding: 0 0;
+}
+
+#buttonCEdit:focus {
+  border: none;
+}
+
+/*Edit Step*/
+.editStepPage h3 {
+  color:#5ea5f2;
+  text-align: center;
+  padding-bottom: 30px;
+}
+
+.editStepPage {
+  margin-top: 2rem;
+}
+
+.editStepPage div {
+  padding-bottom: 10px;
+}

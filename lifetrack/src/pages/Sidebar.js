@@ -23,23 +23,28 @@ function Sidebar(props) {
 
     return (
         <div class="sidebar">
-            <h3>Hello, {props.firstName}</h3>
-            <hr></hr>
-            <div>
-                <i class="bi bi-list-ul"></i>
-                <a href="/dashboard" onClick={onAll}>All Goals</a>
+            <div class="user">
+                <h3>Hello, {props.firstName}</h3>
             </div>
-            <div>
-                <i class="bi bi-dash-circle"></i>
-                <a href="/active" onClick={onActive}>Active</a>
+            <div class="links">
+                <a href="/dashboard" onClick={onAll}>
+                    <p><i class="bi bi-list-ul"></i>All Goals</p>
+                </a>
             </div>
-            <div>
-                <i class="bi bi-dash-circle"></i>
-                <a href="/inactive" onClick={onInactive}>Inactive</a>
+            <div class="links">
+                <a href="/active" onClick={onActive}>
+                    <p><i class="bi bi-dash-circle"></i>Active</p>
+                </a>
             </div>
-            <div>
-                <i class="bi bi-check2-circle"></i>
-                <a href="/complete" onClick={onComplete}>Completed</a>
+            <div class="links">
+                <a href="/inactive" onClick={onInactive}>
+                    <p><i class="bi bi-dash-circle"></i>Inactive</p>
+                </a>
+            </div>
+            <div class="links">
+                <a href="/complete" onClick={onComplete}>
+                    <p><i class="bi bi-check2-circle"></i>All Goals</p>
+                </a>
             </div>
         </div>
     )

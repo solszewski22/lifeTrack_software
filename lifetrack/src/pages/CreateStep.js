@@ -24,7 +24,7 @@ function Step(props) {
     }
 
     return (
-        <form onSubmit={addStep}>
+        <form onSubmit={addStep} class="editStep">
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingTwo">
                     <p class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
@@ -50,7 +50,7 @@ function Step(props) {
                         <div class="mb-3">
                             <textarea class="form-control" id="notes" rows="3" placeholder="Notes"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-success">Save</button>
+                        <button type="submit" class="btn btn-editStep">Save</button>
                     </div>
                 </div>
             </div>

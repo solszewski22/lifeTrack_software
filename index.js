@@ -125,8 +125,18 @@ app.post('/newGoal', async (req, res) => {
 
 app.post('/getSteps', async(req, res) => {
     try {
-        const goal = await db.getSteps(req.body.id);
-        res.json(goal);
+        const steps = await db.getSteps(req.body.id);
+        res.json(steps);
+    }
+    catch(err) {
+        res.json(err);
+    }
+});
+
+app.post('/getStep', async(req, res) => {
+    try {
+        const step = await db.getSpecificStep(req.body.id);
+        res.json(step);
     }
     catch(err) {
         res.json(err);
@@ -143,11 +153,53 @@ app.post('/getContacts', async(req, res) => {
     }
 });
 
+app.post('/getContact', async(req, res) => {
+    try {
+        const contact = await db.getSpecificContact(req.body.id);
+        res.json(contact);
+    }
+    catch(err) {
+        res.json(err);
+    }
+});
+
 app.post('/updateGoal', async(req, res) => {
     try {
         await db.updateGoal(req.body.id, req.body.title, req.body.description, req.body.status);
         const goal = await db.getSpecificGoal(req.body.id);
         res.json(goal);
+    }
+    catch(err) {
+        res.json(err);
+    }
+});
+
+app.post('/updateStep', async(req, res) => {
+    try {
+        await db.updateStep(req.body.id, req.body.title, req.body.stepNum, req.body.status, req.body.notes);
+        const step = await db.getSpecificStep(req.body.id);
+        res.json(step);
+    }
+    catch(err) {
+        res.json(err);
+    }
+});
+
+app.post('/updateContact', async(req, res) => {
+    try {
+        await db.updateContact(req.body.id, req.body.firstName, req.body.lastName, req.body.phoneNum, req.body.email);
+        const contact = await db.getSpecificContact(req.body.id);
+        res.json(contact);
+    }
+    catch(err) {
+        res.json(err);
+    }
+});
+
+app.post('/stepsToUpdate', async(req, res) => {
+    try {
+        const stepsToUpdate = await db.getFollowingSteps(req.body.stepID, req.body.goalID);
+        res.json(stepsToUpdate);
     }
     catch(err) {
         res.json(err);

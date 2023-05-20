@@ -497,9 +497,45 @@ class DBAbstraction {
         });
     }
 
+    getSpecificStep(stepID) { /*checked*/
+        const sql = `
+            SELECT title, stepNum, status, notes
+            FROM Steps
+            WHERE id = ?
+        ;`;
+        return new Promise ((resolve, reject) => {
+            this.db.get(sql, [stepID], (err, row) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve(row);
+                }
+            });
+        });
+    }
+
+    getSpecificContact(contactID) { /*checked*/
+        const sql = `
+            SELECT firstName, lastName, phoneNum, email
+            FROM Contacts
+            WHERE id = ?
+        ;`;
+        return new Promise ((resolve, reject) => {
+            this.db.get(sql, [contactID], (err, row) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve(row);
+                }
+            });
+        });
+    }
+
     getSteps(goalID) { /*checked*/
         const sql = `
-            SELECT stepNum, title, status, notes
+            SELECT id, stepNum, title, status, notes
             FROM Steps
             WHERE Steps.goal_id = ?
             ORDER BY stepNum ASC
@@ -518,7 +554,7 @@ class DBAbstraction {
 
     getContacts(goalID) { /*checked*/
         const sql = `
-            SELECT Contacts.firstName, Contacts.lastName, Contacts.phoneNum, Contacts.email
+            SELECT Contacts.id, Contacts.firstName, Contacts.lastName, Contacts.phoneNum, Contacts.email
             FROM GoalContact, Goals, Contacts
             WHERE GoalContact.goal_id = Goals.id
             AND GoalContact.contact_id = Contacts.id
@@ -544,6 +580,84 @@ class DBAbstraction {
         ;`;
         return new Promise ((resolve, reject) => {
             this.db.all(sql, [title, description, status, goalID], (err, row) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve(row);
+                }
+            });
+        });
+    }
+
+    updateStep(stepID, title, stepNum, status, notes) { /*checked*/
+        const sql = `
+            UPDATE Steps
+            SET title = ?, stepNum = ?, status = ?, notes = ?
+            WHERE id = ?
+        ;`;
+        return new Promise ((resolve, reject) => {
+            this.db.all(sql, [title, stepNum, status, notes, stepID], (err, row) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve(row);
+                }
+            });
+        });
+    }
+
+    getFollowingSteps(stepID, goalID) {
+        const sql = `
+            WITH stepToDelete AS (
+                SELECT id, stepNum
+                FROM Steps
+                WHERE id = ?
+                )
+            
+            SELECT Steps.id, Steps.title, Steps.stepNum, Steps.status, Steps.notes
+            FROM stepToDelete, Steps
+            WHERE Steps.stepNum > stepToDelete.stepNum
+            AND Steps.goal_id = ?
+        ;`;
+        return new Promise ((resolve, reject) => {
+            this.db.all(sql, [stepID, goalID], (err, row) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve(row);
+                }
+            });
+        });
+    }
+
+    updateStepNum (stepID) {
+        const sql = `
+            UPDATE Steps
+            SET stepNum = (stepNum - 1);
+            WHERE Steps.id = ?
+        ;`;
+        return new Promise ((resolve, reject) => {
+            this.db.all(sql, [stepID], (err, row) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve(row);
+                }
+            });
+        });
+    }
+
+    deleteStep(stepID) {
+        const sql = `
+            DELETE FROM Steps
+            WHERE id = ?
+        ;`;
+        return new Promise ((resolve, reject) => {
+            this.db.run(sql, [stepID], (err, row) => {
                 if(err) {
                     reject(err);
                 }

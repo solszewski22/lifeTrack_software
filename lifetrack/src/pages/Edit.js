@@ -4,6 +4,7 @@ import CreateContact from './CreateContact'
 
 function Edit(props) {
     const newSteps = useRef([]);
+    // const deleteSteps = useRef([]);
     const newContacts = useRef([]);
     const [steps, setSteps] = useState(props.steps);
     const [contacts, setContacts] = useState(props.contacts);
@@ -36,12 +37,38 @@ function Edit(props) {
             contacts: newContacts
         };
         props.onAddEdits(edits);
+        // props.onDeleteSteps(deleteSteps);
+    }
+
+    function onRowClick(e) {
+        e.preventDefault();
+        const stepID = {
+            id: e.target.buttonEdit.value
+        }
+        props.onGetStep(stepID);
+    }
+
+    // function onRowClickDelete(e) {
+    //     e.preventDefault();
+    //     const stepID = {
+    //         id: e.target.buttonRemove.value
+    //     };
+    //     deleteSteps.current.push(stepID);
+    // }
+
+    function onContactClick(e) {
+        e.preventDefault();
+        const contactID = {
+            id: e.target.buttonCEdit.value
+        }
+        props.onGetContact(contactID);
     }
     
     return (
-        <div class="container">
-            <h3>Edit Your Goal</h3>
+        <div class="container edit">
             <form onSubmit={onFormSubmit}>
+                <button type="submit" class="btn btn-edit">Save</button>
+                <h3>Edit Your Goal</h3>
                 <div class="row">
                     <div class="col">
                         <input type="text" class="form-control" placeholder="Title" id="title" value={props.goal.title}/>
@@ -56,10 +83,28 @@ function Edit(props) {
                     </div>
                 </div>
                 <div class="mb-3">
-                    <textarea class="form-control" id="description" rows="5">{props.goal.description}</textarea>
+                    <textarea class="form-control" id="description" rows="5" placeholder="Description">{props.goal.description}</textarea>
                 </div>
+            </form>
                 <h5>Steps</h5>
-                <table class="table">
+                <div>
+                    {steps.map((step) => {
+                        return ( 
+                            <div class="d-flex flex-row mb-3 steps">
+                                <form class="d-flex flex-row mb-3 edit-steps" key={step.id} onSubmit={onRowClick}>
+                                    <div>{step.stepNum}</div>
+                                    <div>{step.title}</div>
+                                    <button class="btn" type="submit" id="buttonEdit" value={step.id}><i class="bi bi-pencil-square edit-pencil-square"></i></button>
+                                </form>
+                                {/* <form onSubmit={onRowClickDelete}>
+                                    <button type="submit" id="buttonRemove" class="btn btn-danger" value={step.id}>Delete</button>
+                                </form> */}
+                            </div>
+                        )
+                    })}
+                </div>
+                <CreateStep onAddStep={setNewStep}/>
+                {/* <table class="table">
                     <thead>
                         <tr>
                         <th scope="col">#</th>
@@ -69,15 +114,30 @@ function Edit(props) {
                     <tbody>
                         {steps.map((step) => {
                             return (
-                                <tr key={step.stepNum}>
+                                <tr key={step.id} onSubmit={onRowClick}>
                                     <td>{step.stepNum}</td>
                                     <td>{step.title}</td>
+                                    <button type="submit" id="button" value={step.id}>Edit</button>
                                 </tr>
                             );
                         })}
                     </tbody>
-                </table>
+                </table> */}
                 <h5>Contacts</h5>
+                <div>
+                    {contacts.map((contact) => {
+                        return ( 
+                            <form class="d-flex flex-row mb-3 edit-steps" key={contact.id} onSubmit={onContactClick}>
+                                    <div>{contact.firstName}</div>
+                                    <div>{contact.lastName}</div>
+                                    <div>{contact.phoneNum}</div>
+                                    <div>{contact.email}</div>
+                                    <button class="btn" type="submit" id="buttonCEdit" value={contact.id}><i class="bi bi-pencil-square edit-pencil-square"></i></button>
+                            </form>
+                        )
+                    })}
+                </div>
+                {/* <h5>Contacts</h5>
                 <table class="table">
                     <thead>
                         <tr>
@@ -99,10 +159,7 @@ function Edit(props) {
                             );
                         })}
                     </tbody>
-                </table>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-            <CreateStep onAddStep={setNewStep}/>
+                </table> */}
             <CreateContact onAddContact={setNewContact} />
         </div>
     )

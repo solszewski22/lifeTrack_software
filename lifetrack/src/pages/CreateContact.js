@@ -20,7 +20,7 @@ function Contact(props) {
     }
 
     return (
-        <form onSubmit={addContact}>
+        <form onSubmit={addContact} class="editStep">
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingTwo">
                     <p class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseTwo">
@@ -45,7 +45,7 @@ function Contact(props) {
                                 <input type="text" class="form-control" placeholder="Email" id="email" />
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-success">Save</button>
+                        <button type="submit" class="btn btn-editStep">Save</button>
                     </div>
                 </div>
             </div>
