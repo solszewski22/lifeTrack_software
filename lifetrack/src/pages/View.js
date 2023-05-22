@@ -8,9 +8,20 @@ function View(props) {
         navigate('/edit');
     };
 
+    function goDelete () {
+        props.onDeleteGoal();
+    }
+
     return (
-        <div class="container view" onClick={goToEdit}>
-            <div type="click"><i class="bi bi-pencil-square view-pencil-square"></i></div>
+        <div class="container view">
+            <div class="view-btns" >
+                <div onClick={goToEdit}>
+                    <div type="click"><i class="bi bi-pencil-square view-pencil-square"></i></div>
+                </div>
+                <div onClick={goDelete}>
+                    <div type="click"><i class="bi bi-trash view-delete"></i></div>
+                </div>
+            </div>
             <h2>{props.goal.title}</h2>
             <p>Status: {props.goal.status}</p>
             <p>Desrciption:<br/>{props.goal.description}</p>

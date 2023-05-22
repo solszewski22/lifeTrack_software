@@ -13,7 +13,7 @@ function Dashboard(props) {
     
     return (
         <div class="container dashboard">
-            <Link to="/createGoal" ><i class="bi bi-plus-circle"></i></Link>
+            <Link to="/createGoal" class="btn"><i class="bi bi-plus-circle">   Add Goal</i></Link>
             <div class="goal-display">
                 {props.goals.map((goal) => {
                     return (

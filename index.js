@@ -206,6 +206,70 @@ app.post('/stepsToUpdate', async(req, res) => {
     }
 });
 
+app.post('/updateStepNum', async(req, res) => {
+    try {
+        await db.updateStepNum(req.body.id);
+    }
+    catch(err) {
+        res.json(err);
+    }
+});
+
+app.post('/deleteStep', async(req, res) => {
+    try {
+        await db.deleteStep(req.body.stepID);
+        const steps = await db.getSteps(req.body.goalID);
+        res.json(steps);
+    }
+    catch(err) {
+        res.json(err);
+    }
+});
+
+app.post('/deleteContact', async(req, res) => {
+    try {
+        await db.deleteGoalContact(req.body.id);
+        await db.deleteContact(req.body.id);
+        const contacts = await db.getContacts(req.body.goalID);
+        res.json(contacts);
+    }
+    catch(err) {
+        res.json(err);
+    }
+});
+
+app.post('/deleteGoalSteps', async(req, res) => {
+    try {
+        await db.deleteGoalSteps(req.body.id);
+        res.json({"finished" : "done"});
+    }
+    catch(err) {
+        res.json(err);
+    }
+});
+
+app.post('/deleteSharedGoals', async(req, res) => {
+    try {
+        await db.deleteSharedGoal(req.body.id);
+        res.json({"finished" : "done"});
+    }
+    catch(err) {
+        res.json(err);
+    }
+});
+
+app.post('/deleteGoal', async(req, res) => {
+    try {
+        await db.deleteGoal(req.body.id);
+        console.log(req.body.email);
+        const goals = await db.getAllGoals(req.body.email);
+        res.json(goals);
+    }
+    catch(err) {
+        res.json(err);
+    }
+});
+
 app.post('/newDetail', async (req, res) => {
     try {
         const goalID = await db.getGoalID(req.body.goalTitle);

@@ -608,7 +608,7 @@ class DBAbstraction {
         });
     }
 
-    getFollowingSteps(stepID, goalID) {
+    getFollowingSteps(stepID, goalID) { /*checked*/
         const sql = `
             WITH stepToDelete AS (
                 SELECT id, stepNum
@@ -633,42 +633,142 @@ class DBAbstraction {
         });
     }
 
-    updateStepNum (stepID) {
+    updateStepNum (stepID) { /*checked*/
         const sql = `
             UPDATE Steps
-            SET stepNum = (stepNum - 1);
+            SET stepNum = stepNum - 1
             WHERE Steps.id = ?
         ;`;
         return new Promise ((resolve, reject) => {
-            this.db.all(sql, [stepID], (err, row) => {
+            this.db.all(sql, [stepID], (err) => {
                 if(err) {
                     reject(err);
                 }
                 else {
-                    resolve(row);
+                    resolve();
                 }
             });
         });
     }
 
-    deleteStep(stepID) {
+    deleteStep(stepID) { /*checked*/
         const sql = `
             DELETE FROM Steps
             WHERE id = ?
         ;`;
         return new Promise ((resolve, reject) => {
-            this.db.run(sql, [stepID], (err, row) => {
+            this.db.run(sql, [stepID], (err) => {
                 if(err) {
                     reject(err);
                 }
                 else {
-                    resolve(row);
+                    resolve();
                 }
             });
         });
     }
 
-    
+    deleteGoalContact(contactID) { /*checked*/
+        const sql = `
+            DELETE FROM GoalContact
+            WHERE contact_id = ?
+        ;`;
+        return new Promise ((resolve, reject) => {
+            this.db.run(sql, [contactID], (err) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve();
+                }
+            });
+        });
+    }
+
+    deleteContact(contactID) { /*checked*/
+        const sql = `
+            DELETE FROM Contacts
+            WHERE id = ?
+        ;`;
+        return new Promise ((resolve, reject) => {
+            this.db.run(sql, [contactID], (err) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve();
+                }
+            });
+        });
+    }
+
+    deleteGoalContact(goalID) { /*checked*/
+        const sql = `
+            DELETE FROM GoalContact
+            WHERE goal_id = ?
+        ;`;
+        return new Promise ((resolve, reject) => {
+            this.db.run(sql, [goalID], (err) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve();
+                }
+            });
+        });
+    }
+
+    deleteGoalSteps(goalID) { /*checked*/
+        const sql = `
+            DELETE FROM Steps
+            WHERE goal_id = ?
+        ;`;
+        return new Promise ((resolve, reject) => {
+            this.db.run(sql, [goalID], (err) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve();
+                }
+            });
+        });
+    }
+
+    deleteSharedGoal(goalID) { /*checked*/
+        const sql = `
+            DELETE FROM SharedGoals
+            WHERE goal_id = ?
+        ;`;
+        return new Promise ((resolve, reject) => {
+            this.db.run(sql, [goalID], (err) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve();
+                }
+            });
+        });
+    }
+
+    deleteGoal(goalID) { /*checked*/
+        const sql = `
+            DELETE FROM Goals
+            WHERE id = ?
+        ;`;
+        return new Promise ((resolve, reject) => {
+            this.db.run(sql, [goalID], (err) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve();
+                }
+            });
+        });
+    }
 
     getUserGoals (userID) {
         const sql =`

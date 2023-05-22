@@ -4,8 +4,9 @@ import CreateContact from './CreateContact'
 
 function Edit(props) {
     const newSteps = useRef([]);
-    // const deleteSteps = useRef([]);
+    const deleteSteps = useRef([]);
     const newContacts = useRef([]);
+    const deleteContacts = useRef([]);
     const [steps, setSteps] = useState(props.steps);
     const [contacts, setContacts] = useState(props.contacts);
 
@@ -37,7 +38,8 @@ function Edit(props) {
             contacts: newContacts
         };
         props.onAddEdits(edits);
-        // props.onDeleteSteps(deleteSteps);
+        props.onDeleteSteps(deleteSteps);
+        props.onDeleteContacts(deleteContacts);
     }
 
     function onRowClick(e) {
@@ -48,13 +50,24 @@ function Edit(props) {
         props.onGetStep(stepID);
     }
 
-    // function onRowClickDelete(e) {
-    //     e.preventDefault();
-    //     const stepID = {
-    //         id: e.target.buttonRemove.value
-    //     };
-    //     deleteSteps.current.push(stepID);
-    // }
+    function onRowClickDelete(e) {
+        e.preventDefault();
+        deleteSteps.current.push(e.target.buttonRemove.value[0]);
+
+        let pos;
+        for(let i = 0; i < steps.length; i++) {
+            if(steps[i].id == e.target.buttonRemove.value[0]) {
+                pos = i;
+                break;
+            }
+        }
+        steps.splice(pos, 1);
+        console.log(steps);
+        for(let j = 0; j < steps.length; j++) {
+            steps[j].stepNum = j+1;
+        }
+        setSteps([...steps]);
+    }
 
     function onContactClick(e) {
         e.preventDefault();
@@ -62,6 +75,20 @@ function Edit(props) {
             id: e.target.buttonCEdit.value
         }
         props.onGetContact(contactID);
+    }
+
+    function onRowContactDelete(e) {
+        e.preventDefault();
+        deleteContacts.current.push(e.target.buttonCRemove.value);
+        let pos;
+        for(let i = 0; i < contacts.length; i++) {
+            if(contacts[i].id == e.target.buttonCRemove.value) {
+                pos = i;
+                break;
+            }
+        }
+        contacts.splice(pos, 1);
+        setContacts([...contacts]);
     }
     
     return (
@@ -96,70 +123,33 @@ function Edit(props) {
                                     <div>{step.title}</div>
                                     <button class="btn" type="submit" id="buttonEdit" value={step.id}><i class="bi bi-pencil-square edit-pencil-square"></i></button>
                                 </form>
-                                {/* <form onSubmit={onRowClickDelete}>
-                                    <button type="submit" id="buttonRemove" class="btn btn-danger" value={step.id}>Delete</button>
-                                </form> */}
+                                <form onSubmit={onRowClickDelete}>
+                                    <button type="submit" id="buttonRemove" class="btn" value={[step.id, step.stepNum]}><i class="bi bi-x-square"></i></button>
+                                </form>
                             </div>
                         )
                     })}
                 </div>
                 <CreateStep onAddStep={setNewStep}/>
-                {/* <table class="table">
-                    <thead>
-                        <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Title</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {steps.map((step) => {
-                            return (
-                                <tr key={step.id} onSubmit={onRowClick}>
-                                    <td>{step.stepNum}</td>
-                                    <td>{step.title}</td>
-                                    <button type="submit" id="button" value={step.id}>Edit</button>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table> */}
                 <h5>Contacts</h5>
                 <div>
                     {contacts.map((contact) => {
-                        return ( 
-                            <form class="d-flex flex-row mb-3 edit-steps" key={contact.id} onSubmit={onContactClick}>
-                                    <div>{contact.firstName}</div>
-                                    <div>{contact.lastName}</div>
-                                    <div>{contact.phoneNum}</div>
-                                    <div>{contact.email}</div>
-                                    <button class="btn" type="submit" id="buttonCEdit" value={contact.id}><i class="bi bi-pencil-square edit-pencil-square"></i></button>
-                            </form>
+                        return (
+                            <div class="d-flex flex-row mb-3 steps">
+                                <form class="d-flex flex-row mb-3 edit-steps" key={contact.id} onSubmit={onContactClick}>
+                                        <div>{contact.firstName}</div>
+                                        <div>{contact.lastName}</div>
+                                        <div>{contact.phoneNum}</div>
+                                        <div>{contact.email}</div>
+                                        <button class="btn" type="submit" id="buttonCEdit" value={contact.id}><i class="bi bi-pencil-square edit-pencil-square"></i></button>
+                                </form>
+                                <form onSubmit={onRowContactDelete}>
+                                    <button type="submit" id="buttonCRemove" class="btn" value={contact.id}><i class="bi bi-x-square"></i></button>
+                                </form>
+                            </div>
                         )
                     })}
                 </div>
-                {/* <h5>Contacts</h5>
-                <table class="table">
-                    <thead>
-                        <tr>
-                        <th scope="col">First Name</th>
-                        <th scope="col">Last Name</th>
-                        <th scopre="col">Phone Number</th>
-                        <th scopre="col">Email</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {contacts.map((contact) => {
-                            return (
-                                <tr key={contact.id}>
-                                    <td>{contact.firstName}</td>
-                                    <td>{contact.lastName}</td>
-                                    <td>{contact.phoneNum}</td>
-                                    <td>{contact.email}</td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table> */}
             <CreateContact onAddContact={setNewContact} />
         </div>
     )

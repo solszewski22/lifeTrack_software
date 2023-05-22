@@ -37,7 +37,7 @@ function NewGoal (props) {
                 <div class="mb-3">
                     <textarea class="form-control" id="description" rows="7" placeholder="Description"></textarea>
                 </div>
-                <button type="submit" class="btn btn-success">Submit</button>
+                <button type="submit" class="btn btn-edit">Submit</button>
             </form>
         </div>
     )

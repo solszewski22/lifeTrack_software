@@ -55,6 +55,7 @@ function App() {
               const first = await response.json();
               setfirstName(first.firstName);
               setStatus("Logout");
+              displayAllGoals();
           } else { 
               console.log("Error with the response data"); 
           } 
@@ -511,38 +512,179 @@ function App() {
         }
       }
 
-    //   async function deleteSteps(steps) {
-    //     try {
-    //         for(let i = 0; i < steps.current.length; i++)
-    //         {
-    //             const stepID = {
-    //                 stepID: steps.current[i].id,
-    //                 goalID: currGoalID  
-    //             }
-    //             console.log(stepID);
-    //             const fetchConfigData = { 
-    //                 method: "POST", 
-    //                 body: JSON.stringify(stepID),  
-    //                 headers: { 
-    //                     "Content-Type": "application/json" 
-    //                 } 
-    //             };
-    
-    //             const response = await fetch('/stepsToUpdate', fetchConfigData); 
-    
-    //             if(response.ok) {
-    //                 const stepsToUpdate = await response.json();
-    //                 console.log(stepsToUpdate);
-    //             }
-    //             else {
-    //                 console.log("Error with the result data");
-    //             }
-    //         }
+      async function deleteSteps(steps) {
+        try {
+            for(let i = 0; i < steps.current.length; i++)
+            {
+                const stepID = {
+                    stepID: steps.current[i],
+                    goalID: currGoalID  
+                }
 
-    //     } catch(err) {
-    //         console.log(`Error getting goals: ${err}`);
-    //     }
-    //   }
+                const fetchConfigData = { 
+                    method: "POST", 
+                    body: JSON.stringify(stepID),  
+                    headers: { 
+                        "Content-Type": "application/json" 
+                    } 
+                };
+    
+                const response = await fetch('/stepsToUpdate', fetchConfigData); 
+    
+                if(response.ok) {
+                    const stepsToUpdate = await response.json();
+                    for(let i = 0; i < stepsToUpdate.length; i++) {
+                        const stepID = {
+                            id: stepsToUpdate[i].id
+                        };
+
+                        const fetchConfigData = { 
+                            method: "POST", 
+                            body: JSON.stringify(stepID),  
+                            headers: { 
+                                "Content-Type": "application/json" 
+                            } 
+                        };
+            
+                        const response1 = await fetch('/updateStepNum', fetchConfigData);
+                        if(!response1.ok) {
+                            console.log("Error with the result data");
+                        }
+                    }
+                    const fetchConfigData = { 
+                        method: "POST", 
+                        body: JSON.stringify(stepID),
+                        headers: { 
+                            "Content-Type": "application/json" 
+                        } 
+                    };
+        
+                    const response2 = await fetch('/deleteStep', fetchConfigData); 
+        
+                    if(response2.ok) {
+                        const newSetSteps = await response2.json();
+                        setCurrSteps(newSetSteps);
+                        navigate('/edit');
+                    } 
+                    else {
+                        console.log("Error with the result data");
+                    }
+                }
+                else {
+                    console.log("Error with the result data");
+                }
+            }
+
+        } catch(err) {
+            console.log(`Error getting goals: ${err}`);
+        }
+      }
+
+      async function deleteContacts(contacts) {
+        try {
+            for(let i = 0; i < contacts.current.length; i++) {
+                const contactID = {
+                    id: contacts.current[i],
+                    goalID: currGoalID
+                }
+
+                const fetchConfigData = { 
+                    method: "POST", 
+                    body: JSON.stringify(contactID),  
+                    headers: { 
+                        "Content-Type": "application/json" 
+                    } 
+                };
+
+                const response = await fetch('/deleteContact', fetchConfigData); 
+
+                if(response.ok) {
+                    const contactsToDisplay = await response.json();
+                    setCurrContacts(contactsToDisplay);
+                }
+                else {
+                    console.log("Error with the result data");
+                }
+            }
+            navigate('/view');
+
+        } catch(err) {
+            console.log(`Error getting goals: ${err}`);
+        }
+      }
+
+      async function deleteGoal() {
+        try {
+           const goal = {
+             id: currGoalID,
+             email: email
+           }
+            const fetchConfigData = { 
+                method: "POST", 
+                body: JSON.stringify(goal),  
+                headers: { 
+                    "Content-Type": "application/json" 
+                } 
+            };
+
+            const response = await fetch('/getContacts', fetchConfigData); 
+
+            if(response.ok) {
+                const contactsDelete = await response.json();
+                for(let i = 0; i < contactsDelete.length; i++) {
+                    const contact = {
+                        id: contactsDelete[i].id,
+                        goalID: currGoalID
+                    }
+
+                    const fetchConfigData = { 
+                        method: "POST", 
+                        body: JSON.stringify(contact),  
+                        headers: { 
+                            "Content-Type": "application/json" 
+                        } 
+                    };
+
+                    const response1 = await fetch('/deleteContact', fetchConfigData);
+
+                    if(response1.ok) {
+                        const contactsToDisplay = await response.json();
+                        setCurrContacts(contactsToDisplay);
+                    }
+                    else {
+                        console.log("Error with the result data");
+                    } 
+                }
+                const response2 = await fetch('/deleteGoalSteps', fetchConfigData);
+                console.log('response ok');
+                if(response2.ok) {
+                    console.log('response 2 ok');
+                    const response3 = await fetch('/deleteSharedGoals', fetchConfigData);
+                    if(response3.ok) {
+                        console.log('response 3 ok');
+                        console.log(fetchConfigData);
+                        const response4 = await fetch('/deleteGoal', fetchConfigData);
+                        if(response4.ok) {
+                            const updatedGoals = await response4.json();
+                            console.log(updatedGoals);
+                            setGoals(updatedGoals);
+                            navigate('/dashboard');
+                        }
+                        else {
+                            console.log("Error with the result data");
+                        }
+                    }
+                    else {
+                        console.log("Error with the result data");
+                    }
+                } else {
+                    console.log("Error with the result data");
+                }
+            }
+        } catch(err) {
+            console.log(`Error getting goals: ${err}`);
+        }
+    }
 
     return ( 
     <>
@@ -561,15 +703,23 @@ function App() {
         <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/about' element={<About />} />
-            <Route path='/register' element={<Register onAddUser={addUser}/>} />
+            <Route path='/register' element={<Register status={status} onAddUser={addUser}/>} />
             <Route path="/login" element={<Login onValidate={displayName} onDisplayGoals={displayAllGoals}/>} />
             <Route path="/dashboard" element={<Dashboard goals={goals} onGetGoal={getSpecificGoal} />} />
             <Route path="/active" element={<Dashboard goals={goals} onGetGoal={getSpecificGoal}/>} />
             <Route path="/inactive" element={<Dashboard goals={goals} onGetGoal={getSpecificGoal}/>} />
             <Route path="/complete" element={<Dashboard goals={goals} onGetGoal={getSpecificGoal}/>} />
             <Route path="/createGoal" element={<NewGoalOverview onAddGoal={addGoal} />} />
-            <Route path="/view" element={<View goal={currGoal} steps={currSteps} contacts={currContacts}/>} />
-            <Route path="/edit" element={<Edit goal={currGoal} steps={currSteps} contacts={currContacts} onAddEdits={addEdits} onGetStep={getSpecificStep} onGetContact={getSpecificContact} />} />
+            <Route path="/view" element={<View goal={currGoal} steps={currSteps} contacts={currContacts} onDeleteGoal={deleteGoal}/>} />
+            <Route path="/edit" element={<Edit 
+                goal={currGoal} 
+                steps={currSteps} 
+                contacts={currContacts} 
+                onAddEdits={addEdits} 
+                onGetStep={getSpecificStep} 
+                onGetContact={getSpecificContact} 
+                onDeleteSteps={deleteSteps} 
+                onDeleteContacts={deleteContacts} />} />
             <Route path="/editStep" element={<EditStep step={currStep} onAddStepEdits={addStepEdits}/>} />
             <Route path="/editContact" element={<EditContact contact={currContact} onAddContactEdits={addContactEdits}/> }/>
         </Routes>

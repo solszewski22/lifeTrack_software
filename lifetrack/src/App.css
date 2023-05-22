@@ -14,10 +14,10 @@
     align-items: stretch;
     gap: 2rem;
     padding: 0 1rem;
-    overflow: hidden;
+    /* overflow: hidden;
     position: fixed;
     top: 0;
-    width: 100%;
+    width: 100%; */
   }
   
   .site-title {
@@ -106,6 +106,271 @@
     box-shadow: none;
   }
 
+  /*Register*/
+  .form-container {
+    margin: 100px auto;
+    width: 1000px;
+    box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.2);
+    position: relative;
+    border-radius: 10px;
+    height: 600px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 2%;
+    right: 3%;
+    font-size: 1.5rem;
+    z-index: 1;
+    color: #fff;
+    cursor: pointer;
+  }
+  /*url('paper.gif'); */
+  .form-content-left {
+    background-image: url("/public/imgs/bulletinboard.jpeg");
+    border-radius: 10px 0 0 10px;
+    position: relative;
+  }
+  
+  .form-img {
+    width: 200%;
+    height: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-40%, -50%);
+  }
+  
+  .form-img-2 {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-90%, -90%);
+  }
+  
+  .form-success {
+    text-align: center;
+    font-size: 24px;
+    margin-top: 80px;
+    color: #fff;
+  }
+  
+  .form-content-right {
+    border-radius: 0 10px 10px 0;
+    position: relative;
+    background: linear-gradient(90deg, rgb(100, 216, 54) 0%, rgb(78, 211, 12) 100%);
+  }
+  
+  .form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .form h1 {
+    font-size: 1rem;
+    text-align: start;
+    width: 80%;
+    margin-bottom: 1rem;
+    color: #fff;
+  }
+  
+  .form-inputs {
+    margin-bottom: 0.5rem;
+    width: 80%;
+  }
+  
+  .form-inputs p {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    color: #f00e0e;
+  }
+  
+  .form-label {
+    display: inline-block;
+    font-size: 0.8rem;
+    margin-bottom: 6px;
+    color: #fff;
+  }
+  
+  .form-input {
+    display: block;
+    padding-left: 10px;
+    outline: none;
+    border-radius: 2px;
+    height: 40px;
+    width: 100%;
+    border: none;
+  }
+  
+  .form-input::placeholder {
+    color: #595959;
+    font-size: 12px;
+  }
+  
+  .form-input-btn {
+    width: 80%;
+    height: 50px;
+    margin-top: 10px;
+    border-radius: 2px;
+    background: linear-gradient(
+      90deg,
+      rgb(250, 250, 72) 0%,
+      rgb(173, 65, 205) 100%
+     
+    );
+    outline: none;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+  }
+  
+  .form-input-btn:hover {
+    cursor: pointer;
+    background: linear-gradient(
+      90deg,
+      rgb(114, 247, 88) 0%,
+      rgb(129, 241, 10) 100%
+    );
+    transition: all 0.4s ease-out;
+  }
+  
+  .form-input-login {
+    font-size: 0.8rem;
+    margin-top: 10px;
+    color: #fff;
+    width: 80%;
+    text-align: center;
+  }
+  
+  .form-input-login a {
+    text-decoration: none;
+    color: #ecf639;
+    font-weight: 800;
+  }
+
+  /*Login*/
+  .title {
+    color: white;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  .subtitle {
+    color: rgb(255, 251, 251);
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  .inputs_container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .inputs_container input {
+    width: 95%;
+    margin: 1.5rem auto;
+    padding: 1rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-family: inherit;
+    outline: 0;
+    border: 0;
+  }
+  
+  .login_button {
+    display: block;
+    margin: 3rem auto 1rem auto;
+    width: 55%;
+    padding: 0.75rem 1rem;
+    border-radius: 5px;
+    
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+    background: linear-gradient(90deg,
+    rgb(250, 250, 72) 0%,
+    rgb(173, 65, 205) 100%);
+    outline: none;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+   
+  }
+  
+  .link_container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .small {
+    color: rgb(218, 218, 218);
+    text-align: center;
+    font-size: 0.85rem;
+    text-decoration: underline;
+    margin-bottom: 5rem;
+    cursor: pointer;
+  }
+  
+  .icons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+  
+  
+  .error_msg {
+    color: red;
+    padding-left: 1rem;
+    font-size: 0.85rem;
+    margin: 0;
+  }
+  
+  @media only screen and (max-width: 620px) {
+    .inputs_container input {
+      width: 100%;
+    }
+  
+    .login_button {
+      width: 100%;
+    }
+  
+    .error_msg {
+      padding-left: 0.2rem;
+    }
+  }
+  
+  @media only screen and (max-height: 670px) {
+    .subtitle {
+      margin-bottom: 2rem;
+    }
+  
+    .small {
+      margin-bottom: 3rem;
+    }
+  }
+
+  .login-card {
+    width: 50vw;
+    background-color: #c4f150;
+    height: 100vh;
+    border-radius: 1rem;
+    padding: 2rem;
+    margin: 1rem;
+    margin-left: 20rem;
+  }
+
   /*Sidebar*/
 .sidebar {
   background-color: #89e1d0;
@@ -113,7 +378,7 @@
   width: 20vw;
   padding-top: 2%;
   position: fixed;
-  bottom: 0; 
+  /* bottom: 0;  */
 }
 
 .sidebar h3 {
@@ -153,20 +418,23 @@
 .container {
   width: 78vw;
   float: right;
-  margin-top: 60px;
+  margin-top: 6px;
 }
 /*Dashboard*/
 
 .bi-plus-circle {
   font-size: 20px;
   float: left;
-  padding-top: 10px;
-  padding-right: 10px;
+  padding: 5px 5px;
   color: #c4f150;
+  background-color: white;
+  border: 2px solid #c4f150;
+  border-radius: 5px;
 }
 
 .bi-plus-circle:hover {
-  color: black;
+  color: white;
+  background-color: #c4f150;
 }
 
 .goal-display {
@@ -190,14 +458,6 @@
 .card-title {
   text-align: center;
 }
-
-/* .card-descrip {
-  --max-lines: 3;
-  display:-webkit-box;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: var(--max-lines);
-} */
 
 .card-link {
   float:right;
@@ -271,6 +531,20 @@
   padding-top: 20px;
 }
 
+.view-delete {
+  color: red;
+  font-size: 25px;
+}
+
+.view-delete:hover {
+  color: black;
+  cursor: pointer;
+}
+
+.view-btns {
+  display: flex;
+  gap: 15px;
+}
 
 /*Edit Page*/
  .edit h3{
@@ -336,6 +610,18 @@
 }
 
 #buttonCEdit:focus {
+  border: none;
+}
+
+.bi-x-square {
+  color: red;
+}
+
+.bi-x-square:hover {
+  color: black;
+}
+
+.bi-x-square:active {
   border: none;
 }
 

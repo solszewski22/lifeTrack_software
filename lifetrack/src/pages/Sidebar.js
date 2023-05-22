@@ -43,7 +43,7 @@ function Sidebar(props) {
             </div>
             <div class="links">
                 <a href="/complete" onClick={onComplete}>
-                    <p><i class="bi bi-check2-circle"></i>All Goals</p>
+                    <p><i class="bi bi-check2-circle"></i>Complete</p>
                 </a>
             </div>
         </div>
