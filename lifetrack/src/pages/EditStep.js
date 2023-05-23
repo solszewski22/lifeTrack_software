@@ -2,21 +2,16 @@ import React , {useState} from 'react'
 
 function EditStep(props) {
     const [status, setStatus] = useState("Active");
-    const [title, setTitle] = useState(props.title);
 
     function statusValue(e) {
         setStatus(e.target.value);
-    }
-
-    function changeTitle (e) {
-        setTitle(e.target.title);
     }
 
     function onFormSubmit(e) {
         e.preventDefault();
         const edits = {
             stepNum: e.target.stepNum.value,
-            title: title,
+            title: e.target.title.value,
             status: status,
             notes: e.target.notes.value
         }
@@ -41,7 +36,7 @@ function EditStep(props) {
                         </select>
                     </div>
                     <div class="col">
-                        <input type="text" class="form-control" placeholder="Title" id="title" value={props.step.title} onChange={changeTitle}/>
+                        <input type="text" class="form-control" placeholder="Title" id="title" defaultValue={props.step.title}/>
                     </div>
                 </div>
                 <div class="mb-3">

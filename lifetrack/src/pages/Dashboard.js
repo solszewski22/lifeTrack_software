@@ -12,8 +12,9 @@ function Dashboard(props) {
     }
     
     return (
-        <div class="container dashboard">
-            <Link to="/createGoal" class="btn"><i class="bi bi-plus-circle">   Add Goal</i></Link>
+        <div class="container">
+        <Link to="/createGoal" class="btn"><i class="bi bi-plus">    Add Goal</i></Link>
+        <div class="dashboard">
             <div class="goal-display">
                 {props.goals.map((goal) => {
                     return (
@@ -28,6 +29,7 @@ function Dashboard(props) {
                     )
                 })}
             </div>
+        </div>
         </div>
     )
 };

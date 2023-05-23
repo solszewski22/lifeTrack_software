@@ -18,8 +18,8 @@ import EditContact from './pages/EditContact';
 
 function App() {
     const [firstName, setfirstName] = useState();
-    // const [goalTitle, setGoalTitle] = useState();
     const [email, setEmail] = useState();
+
     const [goals, setGoals] = useState([]);
     const [currGoal, setCurrGoal] = useState([]);
     const [currSteps, setCurrSteps] = useState([]);
@@ -73,7 +73,7 @@ function App() {
             email: user.email,
             password: user.password
           }; 
-    
+          setEmail(userData.email);
           const fetchConfigData = { 
               method: "POST", 
               body: JSON.stringify(userData),  
@@ -87,6 +87,8 @@ function App() {
           if(response.ok) { 
               const user = await response.json();
               setfirstName(user.firstName);
+              setStatus("Logout");
+              displayAllGoals();
               navigate('/dashboard');
           } else { 
               console.log("Error with the response data"); 
@@ -102,7 +104,7 @@ function App() {
         const userData = { 
             email: email
           }; 
-    
+          console.log(userData.email);
           const fetchConfigData = { 
               method: "POST", 
               body: JSON.stringify(userData),  
@@ -346,6 +348,7 @@ function App() {
             if(response.ok) { 
                 const goals = await response.json();
                 setGoals(goals);
+                console.log(goals);
                 navigate('/dashboard');
             } else { 
                 console.log("Error with the response data"); 
@@ -451,7 +454,8 @@ function App() {
                 stepNum: step.stepNum,
                 title: step.title,
                 status: step.status,
-                notes: step.notes
+                notes: step.notes,
+                goalID: currGoalID
             }
 
             const fetchConfigData = { 
@@ -465,8 +469,8 @@ function App() {
             const response = await fetch('/updateStep', fetchConfigData); 
 
             if(response.ok) {
-                const stepToDisplay = await response.json();
-                setCurrStep(stepToDisplay);
+                const stepsToDisplay = await response.json();
+                setCurrSteps(stepsToDisplay);
                 navigate('/edit');
             }
             else {
@@ -485,7 +489,8 @@ function App() {
                 firstName: contact.firstName,
                 lastName: contact.lastName,
                 phoneNum: contact.phoneNum,
-                email: contact.email
+                email: contact.email,
+                goalID: currGoalID
             }
 
             const fetchConfigData = { 
@@ -499,8 +504,10 @@ function App() {
             const response = await fetch('/updateContact', fetchConfigData); 
 
             if(response.ok) {
-                const contactToDisplay = await response.json();
-                setCurrContact(contactToDisplay);
+                const contactsToDisplay = await response.json();
+                console.log(contactsToDisplay);
+                setCurrContacts(contactsToDisplay);
+                console.log(currContacts);
                 navigate('/edit');
             }
             else {

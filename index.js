@@ -97,26 +97,18 @@ app.post('/getGoal', async (req, res) => {
 
 app.post('/newGoal', async (req, res) => {
     try {
-        // const categoryID = await db.getCategoryID(req.body.categoryName);
         const userID = await db.getUserID(req.body.email);
 
-        // if(1)
-        // {
-            const title = req.body.title;
-            const description = req.body.description;
-            const status = req.body.status;
-            // const category_id = categoryID.id;
+        const title = req.body.title;
+        const description = req.body.description;
+        const status = req.body.status;
+            
+        const goalID = await db.insertGoal(title, description, status);
 
-            const goalID = await db.insertGoal(title, description, status);
+        await db.insertCollaborator(userID.id, goalID);
+        const goals = await db.getAllGoals(req.body.email);
 
-            await db.insertCollaborator(userID.id, goalID);
-            const goals = await db.getAllGoals(req.body.email);
-
-            res.json(goals);
-        //}
-        // else {
-        //     res.json({"categoty results" : "None"});
-        // }   
+        res.json(goals);  
     }
     catch (err) {
         res.json(err);
@@ -177,8 +169,8 @@ app.post('/updateGoal', async(req, res) => {
 app.post('/updateStep', async(req, res) => {
     try {
         await db.updateStep(req.body.id, req.body.title, req.body.stepNum, req.body.status, req.body.notes);
-        const step = await db.getSpecificStep(req.body.id);
-        res.json(step);
+        const steps = await db.getSteps(req.body.goalID);
+        res.json(steps);
     }
     catch(err) {
         res.json(err);
@@ -188,8 +180,8 @@ app.post('/updateStep', async(req, res) => {
 app.post('/updateContact', async(req, res) => {
     try {
         await db.updateContact(req.body.id, req.body.firstName, req.body.lastName, req.body.phoneNum, req.body.email);
-        const contact = await db.getSpecificContact(req.body.id);
-        res.json(contact);
+        const contacts = await db.getContacts(req.body.goalID);
+        res.json(contacts);
     }
     catch(err) {
         res.json(err);
@@ -270,25 +262,25 @@ app.post('/deleteGoal', async(req, res) => {
     }
 });
 
-app.post('/newDetail', async (req, res) => {
-    try {
-        const goalID = await db.getGoalID(req.body.goalTitle);
-        if(goalID)
-        {
-            const title = req.body.title;
-            const description = req.body.description;
-            const goal_id = goalID.id;
+// app.post('/newDetail', async (req, res) => {
+//     try {
+//         const goalID = await db.getGoalID(req.body.goalTitle);
+//         if(goalID)
+//         {
+//             const title = req.body.title;
+//             const description = req.body.description;
+//             const goal_id = goalID.id;
 
-            await db.insertDetail(title, description, goal_id);
-            res.json({"result" : "success"});
-        } else {
-            res.json({"goal results" : "none"});
-        }
-    }
-    catch (err) {
-        res.json(err);
-    }
-});
+//             await db.insertDetail(title, description, goal_id);
+//             res.json({"result" : "success"});
+//         } else {
+//             res.json({"goal results" : "none"});
+//         }
+//     }
+//     catch (err) {
+//         res.json(err);
+//     }
+// });
 
 app.post('/addContact', async (req, res) => {
     try {
@@ -303,19 +295,19 @@ app.post('/addContact', async (req, res) => {
     }
 });
 
-app.post('/updateDescription', async (req, res) => {
-    try {
-        const goalID = await db.getGoalID(req.body.goalTitle);
-        const description = req.body.description;
+// app.post('/updateDescription', async (req, res) => {
+//     try {
+//         const goalID = await db.getGoalID(req.body.goalTitle);
+//         const description = req.body.description;
 
-        await db.insertDescription(description, goalID.id);
+//         await db.insertDescription(description, goalID.id);
 
-        res.json({"results" : "success"});
-    }
-    catch(err) {
-        res.json(err);
-    }
-});
+//         res.json({"results" : "success"});
+//     }
+//     catch(err) {
+//         res.json(err);
+//     }
+// });
 
 app.post ('/addStep', async (req, res) => {
     try {
@@ -329,156 +321,156 @@ app.post ('/addStep', async (req, res) => {
     
 });
 
-app.post ('/newAttribute', async (req, res) => {
-    try {
-        const stepID = await db.getStepID(req.body.stepTitle);
+// app.post ('/newAttribute', async (req, res) => {
+//     try {
+//         const stepID = await db.getStepID(req.body.stepTitle);
 
-        const title = req.body.title;
-        const description = req.body.description;
+//         const title = req.body.title;
+//         const description = req.body.description;
 
-        await db.insertAttribute(title, description, stepID.id);
-        res.json({"results" : "success"});
-    }
-    catch (err) {
-        res.json(err);
-    }
-});
+//         await db.insertAttribute(title, description, stepID.id);
+//         res.json({"results" : "success"});
+//     }
+//     catch (err) {
+//         res.json(err);
+//     }
+// });
 
-app.post ('/newNote', async (req, res) => {
-    const stepID = await db.getStepID(req.body.stepTitle);
-    try {
-        const description = req.body.description;
+// app.post ('/newNote', async (req, res) => {
+//     const stepID = await db.getStepID(req.body.stepTitle);
+//     try {
+//         const description = req.body.description;
 
-        await db.insertNote(description, stepID.id);
-        res.json({"results" : "success"});
-    }
-    catch (err) {
-        res.json(err);
-    }
-});
+//         await db.insertNote(description, stepID.id);
+//         res.json({"results" : "success"});
+//     }
+//     catch (err) {
+//         res.json(err);
+//     }
+// });
 
-app.get('/searchByUser', async (req, res) => {
-    const firstName = req.body.firstName;
-    try {
-        const users = await db.getUser(firstName);
-        res.json(users)
-    }
-    catch (err) {
-        res.json(err);
-    }
-});
+// app.get('/searchByUser', async (req, res) => {
+//     const firstName = req.body.firstName;
+//     try {
+//         const users = await db.getUser(firstName);
+//         res.json(users)
+//     }
+//     catch (err) {
+//         res.json(err);
+//     }
+// });
 
-app.post ('/addCollaborator', async (req, res) => {
-    try {
-        const userID = await db.getUserID(req.body.email);
-        const goalID = await db.getGoalID(req.body.goalTitle);
+// app.post ('/addCollaborator', async (req, res) => {
+//     try {
+//         const userID = await db.getUserID(req.body.email);
+//         const goalID = await db.getGoalID(req.body.goalTitle);
 
-        await db.insertCollaborator(userID.id, goalID.id);
-        res.json({"results" : "success"});
-    }
-    catch(err) {
-        res.json(err);
-    }
-});
+//         await db.insertCollaborator(userID.id, goalID.id);
+//         res.json({"results" : "success"});
+//     }
+//     catch(err) {
+//         res.json(err);
+//     }
+// });
 
-app.post ('/newCategory', async(req, res) => {
-    const categoryName = req.body.categoryName;
-    try {
-        await db.insertCategory(categoryName);
-        res.json({"results" : "success"});
-    }
-    catch(err) {
-        res.json(err);
-    }
-});
+// app.post ('/newCategory', async(req, res) => {
+//     const categoryName = req.body.categoryName;
+//     try {
+//         await db.insertCategory(categoryName);
+//         res.json({"results" : "success"});
+//     }
+//     catch(err) {
+//         res.json(err);
+//     }
+// });
 
-app.get('/displayUserGoals', async (req, res) => {
-    try {
-        const userID = await db.getUserID(req.body.email);
-        const UserGoals = await db.getUserGoals(userID.id);
-        res.json(UserGoals);
-    }
-    catch(err) {
-        res.json(err);
-    }
-});
+// app.get('/displayUserGoals', async (req, res) => {
+//     try {
+//         const userID = await db.getUserID(req.body.email);
+//         const UserGoals = await db.getUserGoals(userID.id);
+//         res.json(UserGoals);
+//     }
+//     catch(err) {
+//         res.json(err);
+//     }
+// });
 
-app.get('/displaySharedGoals', async (req, res) => {
-    try {
-        const userID = await db.getUserID(req.body.email);
-        const sharedGoals = await db.getSharedGoals(userID.id);
-        res.json(sharedGoals);
-    }
-    catch(err) {
-        res.json(err);
-    }
-});
+// app.get('/displaySharedGoals', async (req, res) => {
+//     try {
+//         const userID = await db.getUserID(req.body.email);
+//         const sharedGoals = await db.getSharedGoals(userID.id);
+//         res.json(sharedGoals);
+//     }
+//     catch(err) {
+//         res.json(err);
+//     }
+// });
 
-app.get('/completedGoals', async (req, res) => {
-    try {
-        let completedGoals = [];
-        const userGoals = await db.getAllGoals(req.body.email);
-        for(let i = 0; i < userGoals.length; i++) {
-            const stepsAndStatus = await db.getStepsAndStatus(userGoals[i]["title"]);
-            let retVal = true;
-            for(let j = 0; j < stepsAndStatus.length; j++) {
-                if(stepsAndStatus[j]["status"]  === "incomplete") {
-                    retVal = false;
-                    break;
-                }
-            }
-            if(retVal === true) {
-                completedGoals.push(userGoals[i]);
-            }
-        }
-        res.json(completedGoals);
-    }
-    catch (err) {
-        res.json(err);
-    }
-});
+// app.get('/completedGoals', async (req, res) => {
+//     try {
+//         let completedGoals = [];
+//         const userGoals = await db.getAllGoals(req.body.email);
+//         for(let i = 0; i < userGoals.length; i++) {
+//             const stepsAndStatus = await db.getStepsAndStatus(userGoals[i]["title"]);
+//             let retVal = true;
+//             for(let j = 0; j < stepsAndStatus.length; j++) {
+//                 if(stepsAndStatus[j]["status"]  === "incomplete") {
+//                     retVal = false;
+//                     break;
+//                 }
+//             }
+//             if(retVal === true) {
+//                 completedGoals.push(userGoals[i]);
+//             }
+//         }
+//         res.json(completedGoals);
+//     }
+//     catch (err) {
+//         res.json(err);
+//     }
+// });
 
-app.get('/filterCategory', async(req, res) => {
-    try {
-        const categoryGoals = await db.getByCategory(req.body.email, req.body.category);
-        res.json(categoryGoals);
-    }
-    catch(err){
-        res.json(err);
-    }
-});
+// app.get('/filterCategory', async(req, res) => {
+//     try {
+//         const categoryGoals = await db.getByCategory(req.body.email, req.body.category);
+//         res.json(categoryGoals);
+//     }
+//     catch(err){
+//         res.json(err);
+//     }
+// });
 
-app.get('/search', async(req, res) => {
-    try {
-        const searchResults = await db.getBySearchGoal(req.body.email, req.body.title);
-        res.json(searchResults);
-    }
-    catch(err) {
-        res.json(err);
-    }
-});
+// app.get('/search', async(req, res) => {
+//     try {
+//         const searchResults = await db.getBySearchGoal(req.body.email, req.body.title);
+//         res.json(searchResults);
+//     }
+//     catch(err) {
+//         res.json(err);
+//     }
+// });
 
-app.get('/contact', async (req, res) => {
-    try {
-        const goalContact = await db.getContact(req.body.goalTitle);
-        res.json(goalContact);
-    }
-    catch(err) {
-        res.json(err);
-    }
-});
+// app.get('/contact', async (req, res) => {
+//     try {
+//         const goalContact = await db.getContact(req.body.goalTitle);
+//         res.json(goalContact);
+//     }
+//     catch(err) {
+//         res.json(err);
+//     }
+// });
 
 // get goal and step data
 
-app.post('/reset-password', async (req, res) => {
-    try {
-        await db.resetPassword(req.body.oldPassword, req.body.newPassword);
-        res.json({"result" : "success"});
-    }
-    catch(err) {
-        res.json(err);
-    }
-});
+// app.post('/reset-password', async (req, res) => {
+//     try {
+//         await db.resetPassword(req.body.oldPassword, req.body.newPassword);
+//         res.json({"result" : "success"});
+//     }
+//     catch(err) {
+//         res.json(err);
+//     }
+// });
 
 app.use((req,res) => {
     res.status(404).json({badRequest: `${req.url} cannot be found here`});

@@ -98,7 +98,7 @@ function Edit(props) {
                 <h3>Edit Your Goal</h3>
                 <div class="row">
                     <div class="col">
-                        <input type="text" class="form-control" placeholder="Title" id="title" value={props.goal.title}/>
+                        <input type="text" class="form-control" placeholder="Title" id="title" defaultValue={props.goal.title}/>
                     </div>
                     <div class="col">
                         <select class="form-select" id="status" as="select" onChange={statusValue}>

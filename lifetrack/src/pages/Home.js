@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 function Home() {
     return (
         <div>
-            <img class="bg-img" src="./imgs/goal_life.jpg" alt="Bg-Img"></img>
+            <img class="bg-img" src="./imgs/main.jpg" alt="Bg-Img"></img>
             <div className="welcome">
                 <p class="welcome-text">Let's 
                     <span> GOAL </span>

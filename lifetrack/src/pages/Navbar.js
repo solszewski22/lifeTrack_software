@@ -15,7 +15,7 @@ function Navbar (props) {
 
     return (
         <nav className="nav navbar">
-            <Link to={homeLink} className="site-title">LifeTrack</Link>
+            <Link to={homeLink}><img src="imgs/logo.png" width="150" height="50" alt="logo"></img></Link>
             <ul>
                 <li>
                     <Link to={link} onClick={onChange}>{props.status}</Link>

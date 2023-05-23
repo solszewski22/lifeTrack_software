@@ -33,12 +33,12 @@ function Sidebar(props) {
             </div>
             <div class="links">
                 <a href="/active" onClick={onActive}>
-                    <p><i class="bi bi-dash-circle"></i>Active</p>
+                    <p><i class="bi bi-person-check"></i>Active</p>
                 </a>
             </div>
             <div class="links">
                 <a href="/inactive" onClick={onInactive}>
-                    <p><i class="bi bi-dash-circle"></i>Inactive</p>
+                    <p><i class="bi bi-person-dash"></i>Inactive</p>
                 </a>
             </div>
             <div class="links">
