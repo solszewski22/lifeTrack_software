@@ -39,7 +39,7 @@ function Step(props) {
                             </div>
                             <div class="col-3">
                                 <select class="form-select" id="status" as="select" onChange={statusValue}>
-                                    <option selected >Working</option>
+                                    <option selected value="Working" >Working</option>
                                     <option value="Complete">Complete</option>
                                 </select>
                             </div>

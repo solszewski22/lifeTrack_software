@@ -1,7 +1,7 @@
 import React , {useState} from 'react'
 
 function EditStep(props) {
-    const [status, setStatus] = useState("Active");
+    const [status, setStatus] = useState("Working");
 
     function statusValue(e) {
         setStatus(e.target.value);
@@ -31,7 +31,7 @@ function EditStep(props) {
                     <div class="col-3">
                         <select class="form-select" id="status" as="select" onChange={statusValue}>
                             <option selected value={props.step.status}>{props.step.status}</option>
-                            <option value="Complete">Working</option>
+                            <option value="Working">Working</option>
                             <option value="Complete">Complete</option>
                         </select>
                     </div>

@@ -435,7 +435,6 @@ function App() {
                         console.log("Error with the response data"); 
                     } 
                 }
-
                 navigate('/view');
             } else { 
                 console.log("Error with the response data"); 
